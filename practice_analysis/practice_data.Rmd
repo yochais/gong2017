@@ -1,0 +1,22 @@
+---
+title: "practice_data"
+author: "Yochai Shavit"
+date: "October 29, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#set wd
+```{r}
+getwd()
+setwd("~/Stanford Ph.D/3rd year/Psych 251/Replication project/shavit2017/practice_analysis")
+```
+
+#load packages
+```{r}
+library(tidyverse)
+```
+
