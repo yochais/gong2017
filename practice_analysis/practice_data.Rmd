@@ -24,52 +24,122 @@ library(tidyverse)
 First, create dataset as it will be downloaded from Qualtrix (wide form with raw values of time and money in each of the conditions), including demographic data. This is to test if I can fit the hyperbolic discount function in R
 
 ```{r create og practice df}
-#Create dataframe as will be downloaded from qualtrics
+#Create dataframe with values attempting to be close to the ones in the paper
+df=data.frame(row.names = c(1:108))
+  df$subid=c(1:108)
+  df$age=ifelse(df_og$subid<=54, sample(x=c(60:89), size = 54, replace = T), sample(x=c(18:35), size = 54, replace = T))
+  
+  df$rel_1_mon=ifelse(df$subid<=54, rnorm(n=54, mean = (102.08/(1+0.32*1)), sd=20), rnorm(n=54, mean=(92.96/(1+0.19*1)), sd=20))
+  df$rel_1_time=ifelse(df$subid<=54, rnorm(n=54, mean = (91.35/(1+0.33*1)), sd=20), rnorm(n=54, mean=(48.44/(1+0.43*1)), sd=20))
+  
+  df$rel_2_mon=ifelse(df$subid<=54, rnorm(n=54, mean = (102.08/(1+0.32*2)), sd=20), rnorm(n=54, mean=(92.96/(1+0.19*2)), sd=20))
+  df$rel_2_time=ifelse(df$subid<=54, rnorm(n=54, mean = (91.35/(1+0.33*2)), sd=20), rnorm(n=54, mean=(48.44/(1+0.43*2)), sd=20))
+  
+  df$rel_5_mon=ifelse(df$subid<=54, rnorm(n=54, mean = (102.08/(1+0.32*5)), sd=20), rnorm(n=54, mean=(92.96/(1+0.19*5)), sd=20))
+  df$rel_5_time=ifelse(df$subid<=54, rnorm(n=54, mean = (91.35/(1+0.33*5)), sd=20), rnorm(n=54, mean=(48.44/(1+0.43*5)), sd=20))
+  
+  df$rel_10_mon=ifelse(df$subid<=54, rnorm(n=54, mean = (102.08/(1+0.32*10)), sd=20), rnorm(n=54, mean=(92.96/(1+0.19*10)), sd=20))
+  df$rel_10_time=ifelse(df$subid<=54, rnorm(n=54, mean = (91.35/(1+0.33*10)), sd=20), rnorm(n=54, mean=(48.44/(1+0.43*10)), sd=20))
+  
+  df$rel_20_mon=ifelse(df$subid<=54, rnorm(n=54, mean = (102.08/(1+0.32*20)), sd=20), rnorm(n=54, mean=(92.96/(1+0.19*20)), sd=20))
+  df$rel_20_time=ifelse(df$subid<=54, rnorm(n=54, mean = (91.35/(1+0.33*20)), sd=20), rnorm(n=54, mean=(48.44/(1+0.43*20)), sd=20))
+  
+  df$rel_50_mon=ifelse(df$subid<=54, rnorm(n=54, mean = (102.08/(1+0.32*50)), sd=20), rnorm(n=54, mean=(92.96/(1+0.19*50)), sd=20))
+  df$rel_50_time=ifelse(df$subid<=54, rnorm(n=54, mean = (91.35/(1+0.33*50)), sd=20), rnorm(n=54, mean=(48.44/(1+0.43*50)), sd=20))
+  
+  df$rel_100_mon=ifelse(df$subid<=54, rnorm(n=54, mean = (102.08/(1+0.32*100)), sd=20), rnorm(n=54, mean=(92.96/(1+0.19*100)), sd=20))
+  df$rel_100_time=ifelse(df$subid<=54, rnorm(n=54, mean = (91.35/(1+0.33*100)), sd=20), rnorm(n=54, mean=(48.44/(1+0.43*100)), sd=20))
+  
+  df$nonrel_1_mon=ifelse(df$subid<=54, rnorm(n=54, mean = (12.48/(1+0.23*1)), sd=20), rnorm(n=54, mean=(93.35/(1+0.16*1)), sd=20))
+  df$nonrel_1_time=ifelse(df$subid<=54, rnorm(n=54, mean = (14.22/(1+0.28*1)), sd=20), rnorm(n=54, mean=(47.29/(1+0.5*1)), sd=20))
+  
+  df$nonrel_2_mon=ifelse(df$subid<=54, rnorm(n=54, mean = (12.48/(1+0.23*2)), sd=20), rnorm(n=54, mean=(93.35/(1+0.16*2)), sd=20))
+  df$nonrel_2_time=ifelse(df$subid<=54, rnorm(n=54, mean = (14.22/(1+0.28*2)), sd=20), rnorm(n=54, mean=(47.29/(1+0.5*2)), sd=20))
+  
+  df$nonrel_5_mon=ifelse(df$subid<=54, rnorm(n=54, mean = (12.48/(1+0.23*5)), sd=20), rnorm(n=54, mean=(93.35/(1+0.16*5)), sd=20))
+  df$nonrel_5_time=ifelse(df$subid<=54, rnorm(n=54, mean = (14.22/(1+0.28*5)), sd=20), rnorm(n=54, mean=(47.29/(1+0.5*5)), sd=20))
+  
+  df$nonrel_10_mon=ifelse(df$subid<=54, rnorm(n=54, mean = (12.48/(1+0.23*10)), sd=20), rnorm(n=54, mean=(93.35/(1+0.16*10)), sd=20))
+  df$nonrel_10_time=ifelse(df$subid<=54, rnorm(n=54, mean = (14.22/(1+0.28*10)), sd=20), rnorm(n=54, mean=(47.29/(1+0.5*10)), sd=20))
+  
+  df$nonrel_20_mon=ifelse(df$subid<=54, rnorm(n=54, mean = (12.48/(1+0.23*20)), sd=20), rnorm(n=54, mean=(93.35/(1+0.16*20)), sd=20))
+  df$nonrel_20_time=ifelse(df$subid<=54, rnorm(n=54, mean = (14.22/(1+0.28*20)), sd=20), rnorm(n=54, mean=(47.29/(1+0.5*20)), sd=20))
+  
+  df$nonrel_50_mon=ifelse(df$subid<=54, rnorm(n=54, mean = (12.48/(1+0.23*50)), sd=20), rnorm(n=54, mean=(93.35/(1+0.16*50)), sd=20))
+  df$nonrel_50_time=ifelse(df$subid<=54, rnorm(n=54, mean = (14.22/(1+0.28*50)), sd=20), rnorm(n=54, mean=(47.29/(1+0.5*50)), sd=20))
+  
+  df$nonrel_100_mon=ifelse(df$subid<=54, rnorm(n=54, mean = (12.48/(1+0.23*100)), sd=20), rnorm(n=54, mean=(93.35/(1+0.16*100)), sd=20))
+  df$nonrel_100_time=ifelse(df$subid<=54, rnorm(n=54, mean = (14.22/(1+0.28*100)), sd=20), rnorm(n=54, mean=(47.29/(1+0.5*100)), sd=20))
+  
+  df$incm_lv=ifelse(df$subid<=54, rnorm(n=54, mean = 0.82, sd=0.59), rnorm(n=54, mean=0.94, sd=0.5))
+  df$edu_lv=ifelse(df$subid<=54, sample(x=c(1:5), size=54, replace = T), sample(x=c(1:5), size = 54, replace = T))
+  df$num_friends=ifelse(df$subid<=54, rnorm(n=54, mean = 10.08, sd=9.96), rnorm(n=54, mean=8.10, sd=6.97))
+  df$num_relatives=ifelse(df$subid<=54, rnorm(n=54, mean = 12.36, sd=11.83), rnorm(n=54, mean=8.98, sd=6.41))
+
+```
+ 
+ This dataset is obviously full of impossible values (negative number of friends or value of donations). Would it make sense to set all negative values to zero? In the paper they mention fitting the curve to the group median data because it is typically not normally distributed, so using a normal distribution here probabky wouldn't be different because the mean would be the same as the median.
+
+Let's check this:
+```{r summary raw values}
+summary(df$rel_1_mon);summary(df$rel_2_mon);summary(df$rel_5_mon);summary(df$rel_10_mon);summary(df$rel_20_mon);summary(df$rel_50_mon);summary(df$rel_100_mon) #-> means and medians are quite close
+
+summary(df$rel_1_time);summary(df$rel_2_time);summary(df$rel_5_time);summary(df$rel_10_time);summary(df$rel_20_time);summary(df$rel_50_time);summary(df$rel_100_time) #-> a few have quite a difference (over 1.5 in value)
+
+summary(df$nonrel_1_mon);summary(df$nonrel_2_mon);summary(df$nonrel_5_mon);summary(df$nonrel_10_mon);summary(df$nonrel_20_mon);summary(df$nonrel_50_mon);summary(df$nonrel_100_mon)#-> a few have quite a difference (over 1.5 in value)
+
+summary(df$nonrel_1_time);summary(df$nonrel_2_time);summary(df$nonrel_5_time);summary(df$nonrel_10_time);summary(df$nonrel_20_time);summary(df$nonrel_50_time);summary(df$nonrel_100_time)#-> a few have quite a difference (over 1.5 in value)
+```
+
+#create second dataset, with random sampling from a certain range of values
+
+```{r og dataset}
+#Create new dataset with plausible raw values as will be downloaded from qualtrics (decrease 0.5*distance from range with each move of 1 social distance)
 df_og=data.frame(row.names = c(1:108))
   df_og$subid=c(1:108)
   df_og$age=ifelse(df_og$subid<=54, sample(x=c(60:89), size = 54, replace = T), sample(x=c(18:35), size = 54, replace = T))
   
-  df_og$rel_1_mon=ifelse(df_og$subid<=54, rnorm(n=54, mean = (102.08/(1+0.32*1)), sd=20), rnorm(n=54, mean=(92.96/(1+0.19*1)), sd=20))
-  df_og$rel_1_time=ifelse(df_og$subid<=54, rnorm(n=54, mean = (91.35/(1+0.33*1)), sd=20), rnorm(n=54, mean=(48.44/(1+0.43*1)), sd=20))
+  df_og$rel_1_mon=ifelse(df_og$subid<=54, sample(size=54, x = c(75:100), replace = T), sample(size=54, x=c(70:100), replace = T))
+  df_og$rel_1_time=ifelse(df_og$subid<=54, sample(size=54, x = c(75:100), replace = T), sample(size=54, x=c(40:70), replace = T))
   
-  df_og$rel_2_mon=ifelse(df_og$subid<=54, rnorm(n=54, mean = (102.08/(1+0.32*2)), sd=20), rnorm(n=54, mean=(92.96/(1+0.19*2)), sd=20))
-  df_og$rel_2_time=ifelse(df_og$subid<=54, rnorm(n=54, mean = (91.35/(1+0.33*2)), sd=20), rnorm(n=54, mean=(48.44/(1+0.43*2)), sd=20))
+  df_og$rel_2_mon=ifelse(df_og$subid<=54, sample(size=54, x = c(74:99), replace = T), sample(size=54, x=c(69:99), replace = T))
+  df_og$rel_2_time=ifelse(df_og$subid<=54, sample(size=54, x = c(74:99), replace = T), sample(size=54, x=c(39:69), replace = T))
   
-  df_og$rel_5_mon=cifelse(df_og$subid<=54, rnorm(n=54, mean = (102.08/(1+0.32*5)), sd=20), rnorm(n=54, mean=(92.96/(1+0.19*5)), sd=20))
-  df_og$rel_5_time=cifelse(df_og$subid<=54, rnorm(n=54, mean = (91.35/(1+0.33*5)), sd=20), rnorm(n=54, mean=(48.44/(1+0.43*5)), sd=20))
+  df_og$rel_5_mon=ifelse(df_og$subid<=54, sample(size=54, x = c(72.5:97.5), replace = T), sample(size=54, x=c(67.5:97.5), replace = T))
+  df_og$rel_5_time=ifelse(df_og$subid<=54, sample(size=54, x = c(72.5:97.5), replace = T), sample(size=54, x=c(37.5:67.5), replace = T))
   
-  df_og$rel_10_mon=cifelse(df_og$subid<=54, rnorm(n=54, mean = (102.08/(1+0.32*10)), sd=20), rnorm(n=54, mean=(92.96/(1+0.19*10)), sd=20))
-  df_og$rel_10_time=ifelse(df_og$subid<=54, rnorm(n=54, mean = (91.35/(1+0.33*10)), sd=20), rnorm(n=54, mean=(48.44/(1+0.43*10)), sd=20))
+  df_og$rel_10_mon=ifelse(df_og$subid<=54, sample(size=54, x = c(70:95), replace = T), sample(size=54, x=c(65:95), replace = T))
+  df_og$rel_10_time=ifelse(df_og$subid<=54, sample(size=54, x = c(70:95), replace = T), sample(size=54, x=c(35:65), replace = T))
   
-  df_og$rel_20_mon=ifelse(df_og$subid<=54, rnorm(n=54, mean = (102.08/(1+0.32*20)), sd=20), rnorm(n=54, mean=(92.96/(1+0.19*20)), sd=20))
-  df_og$rel_20_time=ifelse(df_og$subid<=54, rnorm(n=54, mean = (91.35/(1+0.33*20)), sd=20), rnorm(n=54, mean=(48.44/(1+0.43*20)), sd=20))
+  df_og$rel_20_mon=ifelse(df_og$subid<=54, sample(size=54, x = c(65:90), replace = T), sample(size=54, x=c(60:90), replace = T))
+  df_og$rel_20_time=ifelse(df_og$subid<=54, sample(size=54, x = c(65:90), replace = T), sample(size=54, x=c(30:60), replace = T))
   
-  df_og$rel_50_mon=cifelse(df_og$subid<=54, rnorm(n=54, mean = (102.08/(1+0.32*50)), sd=20), rnorm(n=54, mean=(92.96/(1+0.19*50)), sd=20))
-  df_og$rel_50_time=ifelse(df_og$subid<=54, rnorm(n=54, mean = (91.35/(1+0.33*50)), sd=20), rnorm(n=54, mean=(48.44/(1+0.43*50)), sd=20))
+  df_og$rel_50_mon=ifelse(df_og$subid<=54, sample(size=54, x = c(50:75), replace = T), sample(size=54, x=c(45:75), replace = T))
+  df_og$rel_50_time=ifelse(df_og$subid<=54, sample(size=54, x = c(50:75), replace = T), sample(size=54, x=c(15:45), replace = T))
   
-  df_og$rel_100_mon=cifelse(df_og$subid<=54, rnorm(n=54, mean = (102.08/(1+0.32*100)), sd=20), rnorm(n=54, mean=(92.96/(1+0.19*100)), sd=20))
-  df_og$rel_100_time=ifelse(df_og$subid<=54, rnorm(n=54, mean = (91.35/(1+0.33*100)), sd=20), rnorm(n=54, mean=(48.44/(1+0.43*100)), sd=20))
+  df_og$rel_100_mon=ifelse(df_og$subid<=54, sample(size=54, x = c(25:50), replace = T), sample(size=54, x=c(20:50), replace = T))
+  df_og$rel_100_time=ifelse(df_og$subid<=54, sample(size=54, x = c(25:50), replace = T), sample(size=54, x=c(0:20), replace = T))
   
-  df_og$nonrel_1_mon=ifelse(df_og$subid<=54, rnorm(n=54, mean = (12.48/(1+0.23*1)), sd=20), rnorm(n=54, mean=(93.35/(1+0.16*1)), sd=20))
-  df_og$nonrel_1_time=ifelse(df_og$subid<=54, rnorm(n=54, mean = (14.22/(1+0.28*1)), sd=20), rnorm(n=54, mean=(47.29/(1+0.5*1)), sd=20))
+  df_og$nonrel_1_mon=ifelse(df_og$subid<=54, sample(size=54, x = c(40:50), replace = T), sample(size=54, x=c(70:100), replace = T))
+  df_og$nonrel_1_time=ifelse(df_og$subid<=54, sample(size=54, x = c(40:50), replace = T), sample(size=54, x=c(40:70), replace = T))
   
-  df_og$nonrel_2_mon=ifelse(df_og$subid<=54, rnorm(n=54, mean = (12.48/(1+0.23*2)), sd=20), rnorm(n=54, mean=(93.35/(1+0.16*2)), sd=20))
-  df_og$nonrel_2_time=ifelse(df_og$subid<=54, rnorm(n=54, mean = (14.22/(1+0.28*2)), sd=20), rnorm(n=54, mean=(47.29/(1+0.5*2)), sd=20))
+  df_og$nonrel_2_mon=ifelse(df_og$subid<=54, sample(size=54, x = c(39:49), replace = T), sample(size=54, x=c(69:99), replace = T))
+  df_og$nonrel_2_time=ifelse(df_og$subid<=54, sample(size=54, x = c(39:49), replace = T), sample(size=54, x=c(39:69), replace = T))
   
-  df_og$nonrel_5_mon=ifelse(df_og$subid<=54, rnorm(n=54, mean = (12.48/(1+0.23*5)), sd=20), rnorm(n=54, mean=(93.35/(1+0.16*5)), sd=20))
-  df_og$nonrel_5_time=ifelse(df_og$subid<=54, rnorm(n=54, mean = (14.22/(1+0.28*5)), sd=20), rnorm(n=54, mean=(47.29/(1+0.5*5)), sd=20))
+  df_og$nonrel_5_mon=ifelse(df_og$subid<=54, sample(size=54, x = c(37.5:47.5), replace = T), sample(size=54, x=c(67.5:97.5), replace = T))
+  df_og$nonrel_5_time=ifelse(df_og$subid<=54, sample(size=54, x = c(37.5:47.5), replace = T), sample(size=54, x=c(37.5:67.5), replace = T))
   
-  df_og$nonrel_10_mon=ifelse(df_og$subid<=54, rnorm(n=54, mean = (12.48/(1+0.23*10)), sd=20), rnorm(n=54, mean=(93.35/(1+0.16*10)), sd=20))
-  df_og$nonrel_10_time=ifelse(df_og$subid<=54, rnorm(n=54, mean = (14.22/(1+0.28*10)), sd=20), rnorm(n=54, mean=(47.29/(1+0.5*10)), sd=20))
+  df_og$nonrel_10_mon=ifelse(df_og$subid<=54, sample(size=54, x = c(35:45), replace = T), sample(size=54, x=c(65:95), replace = T))
+  df_og$nonrel_10_time=ifelse(df_og$subid<=54, sample(size=54, x = c(35:45), replace = T), sample(size=54, x=c(35:65), replace = T))
   
-  df_og$nonrel_20_mon=ifelse(df_og$subid<=54, rnorm(n=54, mean = (12.48/(1+0.23*20)), sd=20), rnorm(n=54, mean=(93.35/(1+0.16*20)), sd=20))
-  df_og$nonrel_20_time=ifelse(df_og$subid<=54, rnorm(n=54, mean = (14.22/(1+0.28*20)), sd=20), rnorm(n=54, mean=(47.29/(1+0.5*20)), sd=20))
+  df_og$nonrel_20_mon=ifelse(df_og$subid<=54, sample(size=54, x = c(30:40), replace = T), sample(size=54, x=c(60:90), replace = T))
+  df_og$nonrel_20_time=ifelse(df_og$subid<=54, sample(size=54, x = c(30:40), replace = T), sample(size=54, x=c(30:80), replace = T))
   
-  df_og$nonrel_50_mon=ifelse(df_og$subid<=54, rnorm(n=54, mean = (12.48/(1+0.23*50)), sd=20), rnorm(n=54, mean=(93.35/(1+0.16*50)), sd=20))
-  df_og$nonrel_50_time=ifelse(df_og$subid<=54, rnorm(n=54, mean = (14.22/(1+0.28*50)), sd=20), rnorm(n=54, mean=(47.29/(1+0.5*50)), sd=20))
+  df_og$nonrel_50_mon=ifelse(df_og$subid<=54, sample(size=54, x = c(15:25), replace = T), sample(size=54, x=c(45:75), replace = T))
+  df_og$nonrel_50_time=ifelse(df_og$subid<=54, sample(size=54, x = c(15:25), replace = T), sample(size=54, x=c(15:45), replace = T))
   
-  df_og$nonrel_100_mon=ifelse(df_og$subid<=54, rnorm(n=54, mean = (12.48/(1+0.23*100)), sd=20), rnorm(n=54, mean=(93.35/(1+0.16*100)), sd=20))
-  df_og$nonrel_100_time=ifelse(df_og$subid<=54, rnorm(n=54, mean = (14.22/(1+0.28*100)), sd=20), rnorm(n=54, mean=(47.29/(1+0.5*100)), sd=20))
+  df_og$nonrel_100_mon=ifelse(df_og$subid<=54, sample(size=54, x = c(0:10), replace = T), sample(size=54, x=c(20:50), replace = T))
+  df_og$nonrel_100_time=ifelse(df_og$subid<=54, sample(size=54, x = c(0:10), replace = T), sample(size=54, x=c(0:20), replace = T))
   
   df_og$incm_lv=ifelse(df_og$subid<=54, rnorm(n=54, mean = 0.82, sd=0.59), rnorm(n=54, mean=0.94, sd=0.5))
   df_og$edu_lv=ifelse(df_og$subid<=54, sample(x=c(1:5), size=54, replace = T), sample(x=c(1:5), size = 54, replace = T))
