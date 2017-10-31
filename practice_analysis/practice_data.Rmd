@@ -17,19 +17,21 @@ setwd("~/Stanford Ph.D/3rd year/Psych 251/Replication project/shavit2017/practic
 
 #load packages
 ```{r load packages}
+library(knitr)
 library(tidyverse)
 library(lavaan)
 library(car)
+library(broom)
 ```
 
 #create data 
 First, create dataset as it will be downloaded from Qualtrix (wide form with raw values of time and money in each of the conditions), including demographic data. This is to test if I can fit the hyperbolic discount function in R
 
-```{r create og practice df}
+```{r create og practice df, echo=FALSE}
 #Create dataframe with values attempting to be close to the ones in the paper
 df=data.frame(row.names = c(1:108))
   df$subid=c(1:108)
-  df$age=ifelse(df_og$subid<=54, sample(x=c(60:89), size = 54, replace = T), sample(x=c(18:35), size = 54, replace = T))
+  df$age=ifelse(df$subid<=54, sample(x=c(60:89), size = 54, replace = T), sample(x=c(18:35), size = 54, replace = T))
   
   df$rel_1_mon=ifelse(df$subid<=54, rnorm(n=54, mean = (102.08/(1+0.32*1)), sd=20), rnorm(n=54, mean=(92.96/(1+0.19*1)), sd=20))
   df$rel_1_time=ifelse(df$subid<=54, rnorm(n=54, mean = (91.35/(1+0.33*1)), sd=20), rnorm(n=54, mean=(48.44/(1+0.43*1)), sd=20))
@@ -83,7 +85,7 @@ df=data.frame(row.names = c(1:108))
  This dataset is obviously full of impossible values (negative number of friends or value of donations). Would it make sense to set all negative values to zero? In the paper they mention fitting the curve to the group median data because it is typically not normally distributed, so using a normal distribution here probabky wouldn't be different because the mean would be the same as the median.
 
 Let's check this:
-```{r summary raw values}
+```{r summary raw values, echo=FALSE}
 summary(df$rel_1_mon);summary(df$rel_2_mon);summary(df$rel_5_mon);summary(df$rel_10_mon);summary(df$rel_20_mon);summary(df$rel_50_mon);summary(df$rel_100_mon) #-> means and medians are quite close
 
 summary(df$rel_1_time);summary(df$rel_2_time);summary(df$rel_5_time);summary(df$rel_10_time);summary(df$rel_20_time);summary(df$rel_50_time);summary(df$rel_100_time) #-> a few have quite a difference (over 1.5 in value)
@@ -95,7 +97,7 @@ summary(df$nonrel_1_time);summary(df$nonrel_2_time);summary(df$nonrel_5_time);su
 
 #create second dataset, with random sampling from a certain range of values
 
-```{r og dataset}
+```{r og dataset, echo=FALSE}
 #Create new dataset with plausible raw values as will be downloaded from qualtrics (decrease 0.5*distance from range with each move of 1 social distance)
 df_og=data.frame(row.names = c(1:108))
   df_og$subid=c(1:108)
@@ -144,7 +146,7 @@ df_og=data.frame(row.names = c(1:108))
   df_og$nonrel_100_time=ifelse(df_og$subid<=54, sample(size=54, x = c(0:10), replace = T), sample(size=54, x=c(0:20), replace = T))
   
   df_og$incm_lv=ifelse(df_og$subid<=54, rnorm(n=54, mean = 0.82, sd=0.59), rnorm(n=54, mean=0.94, sd=0.5))
-  df_og$edu_lv=ifelse(df_og$subid<=54, sample(x=c(1:5), size=54, replace = T), sample(x=c(1:5), size = 54, replace = T))
+  df_og$edu_lv=ifelse(df_og$subid<=54, sample(x=c(1:4), size=54, replace = T), sample(x=c(3:5), size = 54, replace = T))
   df_og$num_friends=ifelse(df_og$subid<=54, rnorm(n=54, mean = 10.08, sd=9.96), rnorm(n=54, mean=8.10, sd=6.97))
   df_og$num_relatives=ifelse(df_og$subid<=54, rnorm(n=54, mean = 12.36, sd=11.83), rnorm(n=54, mean=8.98, sd=6.41))
   df_og$gender=sample(x=c("female", "male"), size = 108, replace=T)
@@ -157,11 +159,38 @@ summary(df_og$age_grp) #-> 54 of each, like I generated the data
 #Descriptive demographics and statistics
 Measure of central tendency and age group differences as reported in the original paper
 ```{r descriptives}
-df_og%>%group_by(age_grp)%>%summarise(Gender_ratio=paste(sum(gender=="male"), "/", sum(gender=="female")), Education_av=mean(edu_lv),Education_sd=sd(edu_lv), Household_income_av=mean(incm_lv),Household_income_sd=sd(incm_lv), sig_relatives_av=mean(num_relatives),sig_relatives_sd=sd(num_relatives), sig_friends_av=mean(num_friends), sig_friends_sd=sd(num_friends))
+#table of descpritive statistics
+dscrpt=df_og%>%group_by(age_grp)%>%summarise(male_female_ratio=paste(sum(gender=="male"), "/", sum(gender=="female")),
+Age_av=mean(age),Age_sd=sd(age), 
+Education_av=mean(edu_lv),Education_sd=sd(edu_lv), Household_income_av=mean(incm_lv),Household_income_sd=sd(incm_lv), sig_relatives_av=mean(num_relatives),sig_relatives_sd=sd(num_relatives), 
+sig_friends_av=mean(num_friends), sig_friends_sd=sd(num_friends))
 
+kable(dscrpt)
+```
+
+```{r test for differences}
+#Gender (chi-square)
+with(df_og,
+print(chisq.test(gender, age_grp, rescale.p = T, correct = F)))
+#Age
+with(df_og,
+print(t.test(age~age_grp)))
+#education level
+with(df_og,
+print(t.test(edu_lv~age_grp)))
+#income level
+with(df_og,
+print(t.test(incm_lv~age_grp)))
+#number of close relatives
+with(df_og,
+print(t.test(num_relatives~age_grp)))
+#number of close friends
+with(df_og,
+print(t.test(num_friends~age_grp)))
 
 ```
 
+**Note-** These data serve, to some extent, as a simulation of the dempgraphic effects in the original paper. The fact that the simulated values for number of close friends and relatives is sometime significant and sometimes not (for both) suggests that the finding that age groups differed in number of relatives but not in number of friends is at the very least fragile. 
 
 #Tidy data
 data needs to be long-form for the first step, whereby each row is one trail for one subject (each subject has 14 rows (donation form * social distance), for each of the 2 kinship conditions (relative/nonrelative), resulting in 28 rows in total for 108 participants, meaning 3024 observations. In addition, add age_group variable.
