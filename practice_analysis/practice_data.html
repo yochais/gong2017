@@ -165,61 +165,61 @@ $(document).ready(function () {
 <p>This dataset is obviously full of impossible values (negative number of friends or value of donations). Would it make sense to set all negative values to zero? In the paper they mention fitting the curve to the group median data because it is typically not normally distributed, so using a normal distribution here probabky wouldn’t be different because the mean would be the same as the median.</p>
 <p>Let’s check this:</p>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##   31.17   64.57   79.75   78.62   91.56  128.41</code></pre>
+##   16.97   60.19   74.72   73.95   87.80  115.14</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##   24.64   49.58   64.54   65.92   78.14  102.58</code></pre>
+##   16.68   54.70   69.55   66.96   79.29  117.95</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##   -2.80   31.51   43.55   44.30   56.32   92.90</code></pre>
+##   2.617  30.020  42.363  43.040  53.952  99.277</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##  -26.00   12.67   27.55   28.02   44.69   72.91</code></pre>
+##  -30.58   10.93   27.55   26.06   40.71   60.87</code></pre>
 <pre><code>##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
-## -36.2600   0.7318  14.4574  14.7805  29.9764  65.9916</code></pre>
+## -43.0165   0.7487  15.3096  17.1975  32.6761  75.9331</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-## -33.845  -6.107   6.947   8.235  22.698  49.745</code></pre>
+## -53.374  -4.626   6.846   8.078  21.408  69.188</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-## -53.198  -9.467   7.808   5.516  18.423  45.178</code></pre>
+## -53.693  -9.728   2.331   2.527  18.077  41.255</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##  -9.897  29.530  46.547  48.535  68.215 117.261</code></pre>
+##  -11.89   26.20   51.52   48.45   68.02  100.43</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##  -17.21   24.24   37.85   41.23   55.35  104.96</code></pre>
+##  -17.60   24.77   41.33   41.48   57.43  101.21</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##  -65.46   15.25   29.31   27.54   41.96   66.77</code></pre>
+##  -19.46   10.50   21.19   22.72   36.55   74.61</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-## -35.216  -1.001  10.049  10.766  22.686  65.432</code></pre>
+## -30.816   4.311  17.743  17.283  29.851  72.322</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##  -31.58   -1.39   10.25   10.80   23.01   61.25</code></pre>
+## -38.416  -3.121   9.566   8.394  20.634  57.487</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-## -42.845  -8.886   7.382   6.196  19.204  55.684</code></pre>
+## -52.883  -9.291   3.335   2.854  18.006  44.704</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-## -50.259 -11.792   4.508   1.885  16.425  49.046</code></pre>
+## -42.998 -10.901   4.494   4.895  19.465  64.889</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##  -29.54    8.73   50.75   48.09   85.89  129.57</code></pre>
+##  -28.64   12.79   35.21   41.22   73.81  124.30</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##  -29.94   13.65   39.72   41.91   72.73  116.87</code></pre>
+## -41.699   6.499  40.510  37.413  66.929 108.246</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##  -35.00    2.17   26.60   25.97   47.91  101.45</code></pre>
-<pre><code>##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
-## -49.3871  -0.8694  14.3473  17.1705  36.0111  66.6708</code></pre>
+## -51.313  -1.164  30.616  26.385  52.902 101.188</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-## -45.799  -1.732  15.845  14.071  29.498  80.505</code></pre>
+## -45.765  -2.126  19.647  19.178  37.945  79.915</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-## -48.763  -8.969   5.884   5.383  20.500  58.400</code></pre>
+## -50.042  -8.978  13.319   9.121  27.813  50.964</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-## -42.706  -8.526   8.083   5.255  18.811  51.909</code></pre>
+## -49.288  -6.774   3.787   5.139  17.942  76.567</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-## -16.685   7.143  21.471  21.908  37.118  73.704</code></pre>
-<pre><code>##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
-## -53.6568  -0.9287  15.5469  17.1171  36.5900  77.7414</code></pre>
+## -57.910 -10.183   4.795   4.666  18.509  56.163</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-## -40.866  -4.905   9.276   9.308  22.678  65.930</code></pre>
+## -40.520   6.123  22.596  20.825  39.691  81.189</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-## -44.574  -5.019   6.784   7.257  19.714  50.891</code></pre>
+## -35.002   2.549  18.638  17.559  34.218  90.531</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-## -44.386  -6.831   5.080   4.821  15.262  61.810</code></pre>
-<pre><code>##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
-## -43.2936 -13.2174   0.5616  -0.1365  14.5436  40.0510</code></pre>
+## -47.282  -4.471   8.347   8.577  21.919  65.259</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-## -41.788 -12.700   2.867   2.893  16.805  48.164</code></pre>
+## -45.639  -6.155   6.699   7.290  18.007  48.096</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+## -49.714  -9.871   1.997   2.090  15.082  57.269</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+## -48.890 -15.549  -2.775  -1.909  10.274  61.261</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+## -51.279  -9.597   3.436   1.436  14.288  44.353</code></pre>
 </div>
 <div id="create-second-dataset-with-random-sampling-from-a-certain-range-of-values" class="section level1">
 <h1>create second dataset, with random sampling from a certain range of values</h1>
@@ -235,52 +235,53 @@ Age_av=mean(age),Age_sd=sd(age),
 Education_av=mean(edu_lv),Education_sd=sd(edu_lv), Household_income_av=mean(incm_lv),Household_income_sd=sd(incm_lv), sig_relatives_av=mean(num_relatives),sig_relatives_sd=sd(num_relatives), 
 sig_friends_av=mean(num_friends), sig_friends_sd=sd(num_friends))
 
-kable(dscrpt)</code></pre>
+kable(dscrpt, digits = 2, align='c', caption = &quot;decsriptive statistics by age group&quot;)</code></pre>
 <table>
+<caption>decsriptive statistics by age group</caption>
 <thead>
 <tr class="header">
-<th align="left">age_grp</th>
-<th align="left">male_female_ratio</th>
-<th align="right">Age_av</th>
-<th align="right">Age_sd</th>
-<th align="right">Education_av</th>
-<th align="right">Education_sd</th>
-<th align="right">Household_income_av</th>
-<th align="right">Household_income_sd</th>
-<th align="right">sig_relatives_av</th>
-<th align="right">sig_relatives_sd</th>
-<th align="right">sig_friends_av</th>
-<th align="right">sig_friends_sd</th>
+<th align="center">age_grp</th>
+<th align="center">male_female_ratio</th>
+<th align="center">Age_av</th>
+<th align="center">Age_sd</th>
+<th align="center">Education_av</th>
+<th align="center">Education_sd</th>
+<th align="center">Household_income_av</th>
+<th align="center">Household_income_sd</th>
+<th align="center">sig_relatives_av</th>
+<th align="center">sig_relatives_sd</th>
+<th align="center">sig_friends_av</th>
+<th align="center">sig_friends_sd</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">old</td>
-<td align="left">20 / 34</td>
-<td align="right">75.20370</td>
-<td align="right">8.099335</td>
-<td align="right">2.500000</td>
-<td align="right">1.1935360</td>
-<td align="right">0.7330479</td>
-<td align="right">0.5949417</td>
-<td align="right">14.515103</td>
-<td align="right">12.183851</td>
-<td align="right">9.425027</td>
-<td align="right">9.741898</td>
+<td align="center">old</td>
+<td align="center">29 / 25</td>
+<td align="center">75.56</td>
+<td align="center">9.77</td>
+<td align="center">2.43</td>
+<td align="center">1.13</td>
+<td align="center">0.73</td>
+<td align="center">0.57</td>
+<td align="center">13.20</td>
+<td align="center">11.21</td>
+<td align="center">7.60</td>
+<td align="center">9.64</td>
 </tr>
 <tr class="even">
-<td align="left">young</td>
-<td align="left">26 / 28</td>
-<td align="right">25.68519</td>
-<td align="right">5.562082</td>
-<td align="right">4.018518</td>
-<td align="right">0.8353226</td>
-<td align="right">0.9498280</td>
-<td align="right">0.4975373</td>
-<td align="right">8.373593</td>
-<td align="right">5.672011</td>
-<td align="right">9.337731</td>
-<td align="right">6.508110</td>
+<td align="center">young</td>
+<td align="center">28 / 26</td>
+<td align="center">27.15</td>
+<td align="center">5.13</td>
+<td align="center">4.02</td>
+<td align="center">0.79</td>
+<td align="center">1.02</td>
+<td align="center">0.54</td>
+<td align="center">9.31</td>
+<td align="center">6.91</td>
+<td align="center">9.34</td>
+<td align="center">6.54</td>
 </tr>
 </tbody>
 </table>
@@ -291,7 +292,7 @@ print(chisq.test(gender, age_grp, rescale.p = T, correct = F)))</code></pre>
 ##  Pearson's Chi-squared test
 ## 
 ## data:  gender and age_grp
-## X-squared = 1.3633, df = 1, p-value = 0.243</code></pre>
+## X-squared = 0.037152, df = 1, p-value = 0.8472</code></pre>
 <pre class="r"><code>#Age
 with(df_og,
 print(t.test(age~age_grp)))</code></pre>
@@ -299,13 +300,13 @@ print(t.test(age~age_grp)))</code></pre>
 ##  Welch Two Sample t-test
 ## 
 ## data:  age by age_grp
-## t = 37.036, df = 93.895, p-value &lt; 2.2e-16
+## t = 32.235, df = 80.159, p-value &lt; 2.2e-16
 ## alternative hypothesis: true difference in means is not equal to 0
 ## 95 percent confidence interval:
-##  46.86373 52.17330
+##  45.41901 51.39580
 ## sample estimates:
 ##   mean in group old mean in group young 
-##            75.20370            25.68519</code></pre>
+##            75.55556            27.14815</code></pre>
 <pre class="r"><code>#education level
 with(df_og,
 print(t.test(edu_lv~age_grp)))</code></pre>
@@ -313,13 +314,13 @@ print(t.test(edu_lv~age_grp)))</code></pre>
 ##  Welch Two Sample t-test
 ## 
 ## data:  edu_lv by age_grp
-## t = -7.6597, df = 94.874, p-value = 1.569e-11
+## t = -8.5121, df = 94.924, p-value = 2.495e-13
 ## alternative hypothesis: true difference in means is not equal to 0
 ## 95 percent confidence interval:
-##  -1.912094 -1.124943
+##  -1.964031 -1.221154
 ## sample estimates:
 ##   mean in group old mean in group young 
-##            2.500000            4.018519</code></pre>
+##            2.425926            4.018519</code></pre>
 <pre class="r"><code>#income level
 with(df_og,
 print(t.test(incm_lv~age_grp)))</code></pre>
@@ -327,13 +328,13 @@ print(t.test(incm_lv~age_grp)))</code></pre>
 ##  Welch Two Sample t-test
 ## 
 ## data:  incm_lv by age_grp
-## t = -2.054, df = 102.78, p-value = 0.04251
+## t = -2.7382, df = 105.78, p-value = 0.00725
 ## alternative hypothesis: true difference in means is not equal to 0
 ## 95 percent confidence interval:
-##  -0.426100734 -0.007459447
+##  -0.50307663 -0.08051729
 ## sample estimates:
 ##   mean in group old mean in group young 
-##           0.7330479           0.9498280</code></pre>
+##           0.7322287           1.0240257</code></pre>
 <pre class="r"><code>#number of close relatives
 with(df_og,
 print(t.test(num_relatives~age_grp)))</code></pre>
@@ -341,13 +342,13 @@ print(t.test(num_relatives~age_grp)))</code></pre>
 ##  Welch Two Sample t-test
 ## 
 ## data:  num_relatives by age_grp
-## t = 3.3581, df = 74.942, p-value = 0.001236
+## t = 2.1704, df = 88.171, p-value = 0.03267
 ## alternative hypothesis: true difference in means is not equal to 0
 ## 95 percent confidence interval:
-##  2.498161 9.784857
+##  0.3281208 7.4490394
 ## sample estimates:
 ##   mean in group old mean in group young 
-##           14.515103            8.373593</code></pre>
+##           13.196646            9.308066</code></pre>
 <pre class="r"><code>#number of close friends
 with(df_og,
 print(t.test(num_friends~age_grp)))</code></pre>
@@ -355,13 +356,13 @@ print(t.test(num_friends~age_grp)))</code></pre>
 ##  Welch Two Sample t-test
 ## 
 ## data:  num_friends by age_grp
-## t = 0.054754, df = 92.45, p-value = 0.9565
+## t = -1.0995, df = 93.224, p-value = 0.2744
 ## alternative hypothesis: true difference in means is not equal to 0
 ## 95 percent confidence interval:
-##  -3.078954  3.253546
+##  -4.889895  1.404580
 ## sample estimates:
 ##   mean in group old mean in group young 
-##            9.425027            9.337731</code></pre>
+##            7.596280            9.338938</code></pre>
 <p><strong>Note-</strong> These data serve, to some extent, as a simulation of the dempgraphic effects in the original paper. The fact that the simulated values for number of close friends and relatives is sometime significant and sometimes not (for both) suggests that the finding that age groups differed in number of relatives but not in number of friends is at the very least fragile.</p>
 </div>
 <div id="tidy-data" class="section level1">
@@ -382,7 +383,530 @@ og_lng=df_og%&gt;%
 </div>
 <div id="curve-fitting" class="section level1">
 <h1>Curve fitting</h1>
-<p>Now that the dataset is tidy, proceed to attemp and fit the hyperbolic discount curve to the group (age_group/)</p>
+<p>Now that the dataset is tidy, proceed to attemp and fit the hyperbolic discount curve to the median value in each group (age_group-kinship-donation form)</p>
+<pre class="r"><code>med_table=og_lng%&gt;%group_by(age_grp,kinship,donation,soc_dist)%&gt;%summarise(med_amnt=median(amount))
+
+#for each age_grp*kinship*donation condition
+old_rel_mon=med_table%&gt;%filter(age_grp==&quot;old&quot; &amp; kinship==&quot;rel&quot; &amp; donation==&quot;mon&quot;)
+kable(old_rel_mon, digits = 2, align = 'c', caption = &quot;Older,relative,money: median amount given&quot;)</code></pre>
+<table>
+<caption>Older,relative,money: median amount given</caption>
+<thead>
+<tr class="header">
+<th align="center">age_grp</th>
+<th align="center">kinship</th>
+<th align="center">donation</th>
+<th align="center">soc_dist</th>
+<th align="center">med_amnt</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">old</td>
+<td align="center">rel</td>
+<td align="center">mon</td>
+<td align="center">1</td>
+<td align="center">88.5</td>
+</tr>
+<tr class="even">
+<td align="center">old</td>
+<td align="center">rel</td>
+<td align="center">mon</td>
+<td align="center">10</td>
+<td align="center">83.0</td>
+</tr>
+<tr class="odd">
+<td align="center">old</td>
+<td align="center">rel</td>
+<td align="center">mon</td>
+<td align="center">100</td>
+<td align="center">39.0</td>
+</tr>
+<tr class="even">
+<td align="center">old</td>
+<td align="center">rel</td>
+<td align="center">mon</td>
+<td align="center">2</td>
+<td align="center">86.5</td>
+</tr>
+<tr class="odd">
+<td align="center">old</td>
+<td align="center">rel</td>
+<td align="center">mon</td>
+<td align="center">20</td>
+<td align="center">78.0</td>
+</tr>
+<tr class="even">
+<td align="center">old</td>
+<td align="center">rel</td>
+<td align="center">mon</td>
+<td align="center">5</td>
+<td align="center">80.5</td>
+</tr>
+<tr class="odd">
+<td align="center">old</td>
+<td align="center">rel</td>
+<td align="center">mon</td>
+<td align="center">50</td>
+<td align="center">60.0</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>old_rel_time=med_table%&gt;%filter(age_grp==&quot;old&quot; &amp; kinship==&quot;rel&quot; &amp; donation==&quot;time&quot;)
+kable(old_rel_time, digits = 2, align = 'c', caption = &quot;Older,relative,time: median amount given&quot;)</code></pre>
+<table>
+<caption>Older,relative,time: median amount given</caption>
+<thead>
+<tr class="header">
+<th align="center">age_grp</th>
+<th align="center">kinship</th>
+<th align="center">donation</th>
+<th align="center">soc_dist</th>
+<th align="center">med_amnt</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">old</td>
+<td align="center">rel</td>
+<td align="center">time</td>
+<td align="center">1</td>
+<td align="center">86.0</td>
+</tr>
+<tr class="even">
+<td align="center">old</td>
+<td align="center">rel</td>
+<td align="center">time</td>
+<td align="center">10</td>
+<td align="center">80.0</td>
+</tr>
+<tr class="odd">
+<td align="center">old</td>
+<td align="center">rel</td>
+<td align="center">time</td>
+<td align="center">100</td>
+<td align="center">34.5</td>
+</tr>
+<tr class="even">
+<td align="center">old</td>
+<td align="center">rel</td>
+<td align="center">time</td>
+<td align="center">2</td>
+<td align="center">86.0</td>
+</tr>
+<tr class="odd">
+<td align="center">old</td>
+<td align="center">rel</td>
+<td align="center">time</td>
+<td align="center">20</td>
+<td align="center">78.5</td>
+</tr>
+<tr class="even">
+<td align="center">old</td>
+<td align="center">rel</td>
+<td align="center">time</td>
+<td align="center">5</td>
+<td align="center">84.5</td>
+</tr>
+<tr class="odd">
+<td align="center">old</td>
+<td align="center">rel</td>
+<td align="center">time</td>
+<td align="center">50</td>
+<td align="center">61.5</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>yng_rel_mon=med_table%&gt;%filter(age_grp==&quot;young&quot; &amp; kinship==&quot;rel&quot; &amp; donation==&quot;mon&quot;)
+kable(yng_rel_mon, digits = 2, align = 'c', caption = &quot;Younger,relative,money: median amount given&quot;)</code></pre>
+<table>
+<caption>Younger,relative,money: median amount given</caption>
+<thead>
+<tr class="header">
+<th align="center">age_grp</th>
+<th align="center">kinship</th>
+<th align="center">donation</th>
+<th align="center">soc_dist</th>
+<th align="center">med_amnt</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">young</td>
+<td align="center">rel</td>
+<td align="center">mon</td>
+<td align="center">1</td>
+<td align="center">85.0</td>
+</tr>
+<tr class="even">
+<td align="center">young</td>
+<td align="center">rel</td>
+<td align="center">mon</td>
+<td align="center">10</td>
+<td align="center">79.0</td>
+</tr>
+<tr class="odd">
+<td align="center">young</td>
+<td align="center">rel</td>
+<td align="center">mon</td>
+<td align="center">100</td>
+<td align="center">33.0</td>
+</tr>
+<tr class="even">
+<td align="center">young</td>
+<td align="center">rel</td>
+<td align="center">mon</td>
+<td align="center">2</td>
+<td align="center">81.0</td>
+</tr>
+<tr class="odd">
+<td align="center">young</td>
+<td align="center">rel</td>
+<td align="center">mon</td>
+<td align="center">20</td>
+<td align="center">72.0</td>
+</tr>
+<tr class="even">
+<td align="center">young</td>
+<td align="center">rel</td>
+<td align="center">mon</td>
+<td align="center">5</td>
+<td align="center">83.0</td>
+</tr>
+<tr class="odd">
+<td align="center">young</td>
+<td align="center">rel</td>
+<td align="center">mon</td>
+<td align="center">50</td>
+<td align="center">59.5</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>yng_rel_time=med_table%&gt;%filter(age_grp==&quot;young&quot; &amp; kinship==&quot;rel&quot; &amp; donation==&quot;time&quot;)
+kable(yng_rel_time, digits = 2, align = 'c', caption = &quot;Younger,relative,time: median amount given&quot;)</code></pre>
+<table>
+<caption>Younger,relative,time: median amount given</caption>
+<thead>
+<tr class="header">
+<th align="center">age_grp</th>
+<th align="center">kinship</th>
+<th align="center">donation</th>
+<th align="center">soc_dist</th>
+<th align="center">med_amnt</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">young</td>
+<td align="center">rel</td>
+<td align="center">time</td>
+<td align="center">1</td>
+<td align="center">57.0</td>
+</tr>
+<tr class="even">
+<td align="center">young</td>
+<td align="center">rel</td>
+<td align="center">time</td>
+<td align="center">10</td>
+<td align="center">49.5</td>
+</tr>
+<tr class="odd">
+<td align="center">young</td>
+<td align="center">rel</td>
+<td align="center">time</td>
+<td align="center">100</td>
+<td align="center">9.5</td>
+</tr>
+<tr class="even">
+<td align="center">young</td>
+<td align="center">rel</td>
+<td align="center">time</td>
+<td align="center">2</td>
+<td align="center">51.0</td>
+</tr>
+<tr class="odd">
+<td align="center">young</td>
+<td align="center">rel</td>
+<td align="center">time</td>
+<td align="center">20</td>
+<td align="center">47.0</td>
+</tr>
+<tr class="even">
+<td align="center">young</td>
+<td align="center">rel</td>
+<td align="center">time</td>
+<td align="center">5</td>
+<td align="center">52.0</td>
+</tr>
+<tr class="odd">
+<td align="center">young</td>
+<td align="center">rel</td>
+<td align="center">time</td>
+<td align="center">50</td>
+<td align="center">28.0</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>old_nonrel_mon=med_table%&gt;%filter(age_grp==&quot;old&quot; &amp; kinship==&quot;nonrel&quot; &amp; donation==&quot;mon&quot;)
+kable(old_nonrel_mon, digits = 2, align = 'c', caption = &quot;Older,non-relative,money: median amount given&quot;)</code></pre>
+<table>
+<caption>Older,non-relative,money: median amount given</caption>
+<thead>
+<tr class="header">
+<th align="center">age_grp</th>
+<th align="center">kinship</th>
+<th align="center">donation</th>
+<th align="center">soc_dist</th>
+<th align="center">med_amnt</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">old</td>
+<td align="center">nonrel</td>
+<td align="center">mon</td>
+<td align="center">1</td>
+<td align="center">45.0</td>
+</tr>
+<tr class="even">
+<td align="center">old</td>
+<td align="center">nonrel</td>
+<td align="center">mon</td>
+<td align="center">10</td>
+<td align="center">39.0</td>
+</tr>
+<tr class="odd">
+<td align="center">old</td>
+<td align="center">nonrel</td>
+<td align="center">mon</td>
+<td align="center">100</td>
+<td align="center">4.0</td>
+</tr>
+<tr class="even">
+<td align="center">old</td>
+<td align="center">nonrel</td>
+<td align="center">mon</td>
+<td align="center">2</td>
+<td align="center">44.0</td>
+</tr>
+<tr class="odd">
+<td align="center">old</td>
+<td align="center">nonrel</td>
+<td align="center">mon</td>
+<td align="center">20</td>
+<td align="center">36.0</td>
+</tr>
+<tr class="even">
+<td align="center">old</td>
+<td align="center">nonrel</td>
+<td align="center">mon</td>
+<td align="center">5</td>
+<td align="center">42.5</td>
+</tr>
+<tr class="odd">
+<td align="center">old</td>
+<td align="center">nonrel</td>
+<td align="center">mon</td>
+<td align="center">50</td>
+<td align="center">20.0</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>old_nonrel_time=med_table%&gt;%filter(age_grp==&quot;old&quot; &amp; kinship==&quot;nonrel&quot; &amp; donation==&quot;time&quot;)
+kable(old_nonrel_time, digits = 2, align = 'c', caption = &quot;Older,non-relative,time: median amount given&quot;)</code></pre>
+<table>
+<caption>Older,non-relative,time: median amount given</caption>
+<thead>
+<tr class="header">
+<th align="center">age_grp</th>
+<th align="center">kinship</th>
+<th align="center">donation</th>
+<th align="center">soc_dist</th>
+<th align="center">med_amnt</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">old</td>
+<td align="center">nonrel</td>
+<td align="center">time</td>
+<td align="center">1</td>
+<td align="center">46.0</td>
+</tr>
+<tr class="even">
+<td align="center">old</td>
+<td align="center">nonrel</td>
+<td align="center">time</td>
+<td align="center">10</td>
+<td align="center">40.0</td>
+</tr>
+<tr class="odd">
+<td align="center">old</td>
+<td align="center">nonrel</td>
+<td align="center">time</td>
+<td align="center">100</td>
+<td align="center">6.0</td>
+</tr>
+<tr class="even">
+<td align="center">old</td>
+<td align="center">nonrel</td>
+<td align="center">time</td>
+<td align="center">2</td>
+<td align="center">45.0</td>
+</tr>
+<tr class="odd">
+<td align="center">old</td>
+<td align="center">nonrel</td>
+<td align="center">time</td>
+<td align="center">20</td>
+<td align="center">35.0</td>
+</tr>
+<tr class="even">
+<td align="center">old</td>
+<td align="center">nonrel</td>
+<td align="center">time</td>
+<td align="center">5</td>
+<td align="center">42.5</td>
+</tr>
+<tr class="odd">
+<td align="center">old</td>
+<td align="center">nonrel</td>
+<td align="center">time</td>
+<td align="center">50</td>
+<td align="center">20.0</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>yng_nonrel_mon=med_table%&gt;%filter(age_grp==&quot;young&quot; &amp; kinship==&quot;nonrel&quot; &amp; donation==&quot;mon&quot;)
+kable(yng_nonrel_mon, digits = 2, align = 'c', caption = &quot;Younger,non-relative,money: median amount given&quot;)</code></pre>
+<table>
+<caption>Younger,non-relative,money: median amount given</caption>
+<thead>
+<tr class="header">
+<th align="center">age_grp</th>
+<th align="center">kinship</th>
+<th align="center">donation</th>
+<th align="center">soc_dist</th>
+<th align="center">med_amnt</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">young</td>
+<td align="center">nonrel</td>
+<td align="center">mon</td>
+<td align="center">1</td>
+<td align="center">82.0</td>
+</tr>
+<tr class="even">
+<td align="center">young</td>
+<td align="center">nonrel</td>
+<td align="center">mon</td>
+<td align="center">10</td>
+<td align="center">79.5</td>
+</tr>
+<tr class="odd">
+<td align="center">young</td>
+<td align="center">nonrel</td>
+<td align="center">mon</td>
+<td align="center">100</td>
+<td align="center">33.0</td>
+</tr>
+<tr class="even">
+<td align="center">young</td>
+<td align="center">nonrel</td>
+<td align="center">mon</td>
+<td align="center">2</td>
+<td align="center">79.0</td>
+</tr>
+<tr class="odd">
+<td align="center">young</td>
+<td align="center">nonrel</td>
+<td align="center">mon</td>
+<td align="center">20</td>
+<td align="center">73.5</td>
+</tr>
+<tr class="even">
+<td align="center">young</td>
+<td align="center">nonrel</td>
+<td align="center">mon</td>
+<td align="center">5</td>
+<td align="center">83.0</td>
+</tr>
+<tr class="odd">
+<td align="center">young</td>
+<td align="center">nonrel</td>
+<td align="center">mon</td>
+<td align="center">50</td>
+<td align="center">55.0</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>yng_nonrel_time=med_table%&gt;%filter(age_grp==&quot;young&quot; &amp; kinship==&quot;nonrel&quot; &amp; donation==&quot;time&quot;)
+kable(yng_nonrel_time, digits = 2, align = 'c', caption = &quot;Younger,non-relative,time: median amount given&quot;)</code></pre>
+<table>
+<caption>Younger,non-relative,time: median amount given</caption>
+<thead>
+<tr class="header">
+<th align="center">age_grp</th>
+<th align="center">kinship</th>
+<th align="center">donation</th>
+<th align="center">soc_dist</th>
+<th align="center">med_amnt</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">young</td>
+<td align="center">nonrel</td>
+<td align="center">time</td>
+<td align="center">1</td>
+<td align="center">55.0</td>
+</tr>
+<tr class="even">
+<td align="center">young</td>
+<td align="center">nonrel</td>
+<td align="center">time</td>
+<td align="center">10</td>
+<td align="center">50.5</td>
+</tr>
+<tr class="odd">
+<td align="center">young</td>
+<td align="center">nonrel</td>
+<td align="center">time</td>
+<td align="center">100</td>
+<td align="center">11.0</td>
+</tr>
+<tr class="even">
+<td align="center">young</td>
+<td align="center">nonrel</td>
+<td align="center">time</td>
+<td align="center">2</td>
+<td align="center">54.5</td>
+</tr>
+<tr class="odd">
+<td align="center">young</td>
+<td align="center">nonrel</td>
+<td align="center">time</td>
+<td align="center">20</td>
+<td align="center">61.5</td>
+</tr>
+<tr class="even">
+<td align="center">young</td>
+<td align="center">nonrel</td>
+<td align="center">time</td>
+<td align="center">5</td>
+<td align="center">54.0</td>
+</tr>
+<tr class="odd">
+<td align="center">young</td>
+<td align="center">nonrel</td>
+<td align="center">time</td>
+<td align="center">50</td>
+<td align="center">29.5</td>
+</tr>
+</tbody>
+</table>
 </div>
 
 
