@@ -151,13 +151,23 @@ df_og=data.frame(row.names = c(1:108))
 ```
 
 #Tidy data
-data needs to be long-form for the first step, whereby each row is one trail for one subject (each subject has 14 rows: kinship, donation form, social distance). In addition, add age_group variable.
+data needs to be long-form for the first step, whereby each row is one trail for one subject (each subject has 14 rows (donation form * social distance), for each of the 2 kinship conditions (relative/nonrelative), resulting in 28 rows in total for 108 participants, meaning 3024 observations. In addition, add age_group variable.
 ```{r tidy data df_og}
 #Add age group variable
 df_og$age_grp=recode(df_og$age, "lo:35='young'; 60:hi='old'", as.factor.result = T)
 summary(df_og$age_grp) #-> 54 of each, like I generated the data
 
-#
-
+#long-form dataset
+og_lng=df_og%>%
+  gather(condition, amount,
+         rel_1_mon,rel_2_mon,rel_5_mon,rel_10_mon,rel_20_mon, rel_50_mon, rel_100_mon,
+         rel_1_time,rel_2_time,rel_5_time,rel_10_time,rel_20_time, rel_50_time, rel_100_time,
+         nonrel_1_mon,nonrel_2_mon,nonrel_5_mon,nonrel_10_mon,nonrel_20_mon, nonrel_50_mon, nonrel_100_mon,
+         nonrel_1_time,nonrel_2_time,nonrel_5_time,nonrel_10_time,nonrel_20_time, nonrel_50_time, nonrel_100_time
+         )%>%
+  separate(condition, c("kin", "soc_dist", "donation"), "_")%>%
+  spread(kin, amount)%>%
+  gather(kinship, amount,
+         rel,nonrel) #-> That works!
 ```
 
