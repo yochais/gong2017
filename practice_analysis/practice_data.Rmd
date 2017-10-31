@@ -165,7 +165,7 @@ Age_av=mean(age),Age_sd=sd(age),
 Education_av=mean(edu_lv),Education_sd=sd(edu_lv), Household_income_av=mean(incm_lv),Household_income_sd=sd(incm_lv), sig_relatives_av=mean(num_relatives),sig_relatives_sd=sd(num_relatives), 
 sig_friends_av=mean(num_friends), sig_friends_sd=sd(num_friends))
 
-kable(dscrpt)
+kable(dscrpt, digits = 2, align='c', caption = "decsriptive statistics by age group")
 ```
 
 ```{r test for differences}
@@ -211,4 +211,33 @@ og_lng=df_og%>%
 ```
 
 #Curve fitting
-Now that the dataset is tidy, proceed to attemp and fit the hyperbolic discount curve to the group (age_group/)
+Now that the dataset is tidy, proceed to attemp and fit the hyperbolic discount curve to the median value in each group (age_group-kinship-donation form)
+```{r median values}
+med_table=og_lng%>%group_by(age_grp,kinship,donation,soc_dist)%>%summarise(med_amnt=median(amount))
+
+#for each age_grp*kinship*donation condition
+old_rel_mon=med_table%>%filter(age_grp=="old" & kinship=="rel" & donation=="mon")
+kable(old_rel_mon, digits = 2, align = 'c', caption = "Older,relative,money: median amount given")
+
+old_rel_time=med_table%>%filter(age_grp=="old" & kinship=="rel" & donation=="time")
+kable(old_rel_time, digits = 2, align = 'c', caption = "Older,relative,time: median amount given")
+
+yng_rel_mon=med_table%>%filter(age_grp=="young" & kinship=="rel" & donation=="mon")
+kable(yng_rel_mon, digits = 2, align = 'c', caption = "Younger,relative,money: median amount given")
+
+yng_rel_time=med_table%>%filter(age_grp=="young" & kinship=="rel" & donation=="time")
+kable(yng_rel_time, digits = 2, align = 'c', caption = "Younger,relative,time: median amount given")
+
+old_nonrel_mon=med_table%>%filter(age_grp=="old" & kinship=="nonrel" & donation=="mon")
+kable(old_nonrel_mon, digits = 2, align = 'c', caption = "Older,non-relative,money: median amount given")
+
+old_nonrel_time=med_table%>%filter(age_grp=="old" & kinship=="nonrel" & donation=="time")
+kable(old_nonrel_time, digits = 2, align = 'c', caption = "Older,non-relative,time: median amount given")
+
+yng_nonrel_mon=med_table%>%filter(age_grp=="young" & kinship=="nonrel" & donation=="mon")
+kable(yng_nonrel_mon, digits = 2, align = 'c', caption = "Younger,non-relative,money: median amount given")
+
+yng_nonrel_time=med_table%>%filter(age_grp=="young" & kinship=="nonrel" & donation=="time")
+kable(yng_nonrel_time, digits = 2, align = 'c', caption = "Younger,non-relative,time: median amount given")
+```
+
