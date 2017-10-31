@@ -18,6 +18,8 @@ setwd("~/Stanford Ph.D/3rd year/Psych 251/Replication project/shavit2017/practic
 #load packages
 ```{r load packages}
 library(tidyverse)
+library(lavaan)
+library(car)
 ```
 
 #create data 
@@ -145,6 +147,17 @@ df_og=data.frame(row.names = c(1:108))
   df_og$edu_lv=ifelse(df_og$subid<=54, sample(x=c(1:5), size=54, replace = T), sample(x=c(1:5), size = 54, replace = T))
   df_og$num_friends=ifelse(df_og$subid<=54, rnorm(n=54, mean = 10.08, sd=9.96), rnorm(n=54, mean=8.10, sd=6.97))
   df_og$num_relatives=ifelse(df_og$subid<=54, rnorm(n=54, mean = 12.36, sd=11.83), rnorm(n=54, mean=8.98, sd=6.41))
+
+```
+
+#Tidy data
+data needs to be long-form for the first step, whereby each row is one trail for one subject (each subject has 14 rows: kinship, donation form, social distance). In addition, add age_group variable.
+```{r tidy data df_og}
+#Add age group variable
+df_og$age_grp=recode(df_og$age, "lo:35='young'; 60:hi='old'", as.factor.result = T)
+summary(df_og$age_grp) #-> 54 of each, like I generated the data
+
+#
 
 ```
 
