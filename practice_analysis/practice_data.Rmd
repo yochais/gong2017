@@ -147,15 +147,25 @@ df_og=data.frame(row.names = c(1:108))
   df_og$edu_lv=ifelse(df_og$subid<=54, sample(x=c(1:5), size=54, replace = T), sample(x=c(1:5), size = 54, replace = T))
   df_og$num_friends=ifelse(df_og$subid<=54, rnorm(n=54, mean = 10.08, sd=9.96), rnorm(n=54, mean=8.10, sd=6.97))
   df_og$num_relatives=ifelse(df_og$subid<=54, rnorm(n=54, mean = 12.36, sd=11.83), rnorm(n=54, mean=8.98, sd=6.41))
+  df_og$gender=sample(x=c("female", "male"), size = 108, replace=T)
+  #Add age group variable
+df_og$age_grp=recode(df_og$age, "lo:35='young'; 60:hi='old'", as.factor.result = T)
+summary(df_og$age_grp) #-> 54 of each, like I generated the data
 
 ```
+
+#Descriptive demographics and statistics
+Measure of central tendency and age group differences as reported in the original paper
+```{r descriptives}
+df_og%>%group_by(age_grp)%>%summarise(Gender_ratio=paste(sum(gender=="male"), "/", sum(gender=="female")), Education_av=mean(edu_lv),Education_sd=sd(edu_lv), Household_income_av=mean(incm_lv),Household_income_sd=sd(incm_lv), sig_relatives_av=mean(num_relatives),sig_relatives_sd=sd(num_relatives), sig_friends_av=mean(num_friends), sig_friends_sd=sd(num_friends))
+
+
+```
+
 
 #Tidy data
 data needs to be long-form for the first step, whereby each row is one trail for one subject (each subject has 14 rows (donation form * social distance), for each of the 2 kinship conditions (relative/nonrelative), resulting in 28 rows in total for 108 participants, meaning 3024 observations. In addition, add age_group variable.
 ```{r tidy data df_og}
-#Add age group variable
-df_og$age_grp=recode(df_og$age, "lo:35='young'; 60:hi='old'", as.factor.result = T)
-summary(df_og$age_grp) #-> 54 of each, like I generated the data
 
 #long-form dataset
 og_lng=df_og%>%
@@ -171,3 +181,5 @@ og_lng=df_og%>%
          rel,nonrel) #-> That works!
 ```
 
+#Curve fitting
+Now that the dataset is tidy, proceed to attemp and fit the hyperbolic discount curve to the group (age_group/)
