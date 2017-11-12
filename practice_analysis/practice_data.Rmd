@@ -22,6 +22,7 @@ library(tidyverse)
 library(lavaan)
 library(car)
 library(broom)
+library(AUC)
 ```
 
 #create data 
@@ -214,6 +215,11 @@ og_lng=df_og%>%
 Now that the dataset is tidy, proceed to attemp and fit the hyperbolic discount curve to the median value in each group (age_group-kinship-donation form)
 ```{r median values}
 med_table=og_lng%>%group_by(age_grp,kinship,donation,soc_dist)%>%summarise(med_amnt=median(amount))
+write_csv(med_table,"med_table_shavit.csv")
+
+ggplot(data=med_table, aes(x=soc_dist, y=med_amnt, color=age_grp))+
+  geom_point()+
+  facet_grid(.~donation, kinship)
 
 #for each age_grp*kinship*donation condition
 old_rel_mon=med_table%>%filter(age_grp=="old" & kinship=="rel" & donation=="mon")
@@ -239,5 +245,71 @@ kable(yng_nonrel_mon, digits = 2, align = 'c', caption = "Younger,non-relative,m
 
 yng_nonrel_time=med_table%>%filter(age_grp=="young" & kinship=="nonrel" & donation=="time")
 kable(yng_nonrel_time, digits = 2, align = 'c', caption = "Younger,non-relative,time: median amount given")
+```
+
+#Code from Mike
+```{r}
+#define dataset
+d=med_table
+d$soc_dist=as.numeric(d$soc_dist)
+
+# first plot
+ggplot(d, 
+       aes(x = soc_dist, y = med_amnt, col = age_grp)) + 
+  geom_point() + 
+  facet_grid(kinship ~ donation) + 
+  geom_smooth(method="lm", formula = y ~ poly(x, 2), 
+              se = FALSE)
+
+# for testing
+data_subset <- filter(d, age_grp == "old", 
+                      kinship == "nonrel", 
+                      donation == "mon")
+
+# v=V/(1 +kN)
+# where V is the undiscounted reward value, 
+# v is the reward value that a person would like to forgo for the benefit for someone at a social distance N, and k is a constant indexing degree of social discounting (i.e., discount rate) across social distances.
+
+# where R-square and root-mean-square error (RMSE) were used to assess the goodness of  t. 
+
+# compute the hyperbolic function
+discount <- function (V, k, N) {
+  nu <- V / (1 + k * N)
+  
+  return(nu)
+}
+
+# compute RMSE for a given parameter set and data
+data_vs_discount <- function(V, k, N, amount) {
+  nu <- discount(V, k, N)
+  
+  RMSE <- sum(sqrt((amount - nu)^2))
+  
+  return(RMSE)
+}
+
+# wrapper to feed to optim
+optim_discount_wrapper <- function(x) {
+  return(data_vs_discount(V = x[1], k = x[2],  
+                          N = data_subset$soc_dist, 
+                          amount = data_subset$med_amnt))
+}
+
+# try fitting optimizer
+optim(c(100, .2), optim_discount_wrapper)
+
+# get predictions on test case
+data_subset$pred <- discount(V = 46, k = .02,
+                             N = data_subset$soc_dist)    
+
+# wrong sketch of how to do this by subject
+# check out the `purrr` package
+d %>%
+  group_by(age_grp, kinship, donation) %>%
+  do(optim(c(100, .2), function(x) {
+    return(data_vs_discount(V = x[1], k = x[2],  
+                            N = .$soc_dist, 
+                            amount = .$med_amnt))
+  }))
 ```
 
