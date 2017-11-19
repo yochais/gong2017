@@ -219,7 +219,7 @@ write_csv(med_table,"med_table_shavit.csv")
 
 ggplot(data=med_table, aes(x=soc_dist, y=med_amnt, color=age_grp))+
   geom_point()+
-  facet_grid(.~donation, kinship)
+  facet_grid(donation~kinship)
 
 #for each age_grp*kinship*donation condition
 old_rel_mon=med_table%>%filter(age_grp=="old" & kinship=="rel" & donation=="mon")
@@ -296,13 +296,14 @@ optim_discount_wrapper <- function(x) {
 }
 
 # try fitting optimizer
-optim(c(100, .2), optim_discount_wrapper)
+opt1=optim(c(100, .2), optim_discount_wrapper)
+opt1 #-> first par= V, second par=k
 
 # get predictions on test case
 data_subset$pred <- discount(V = 46, k = .02,
                              N = data_subset$soc_dist)    
 
-# wrong sketch of how to do this by subject
+## run for each age group, donation and kinship combination ##
 # check out the `purrr` package
 d %>%
   group_by(age_grp, kinship, donation) %>%
@@ -311,5 +312,22 @@ d %>%
                             N = .$soc_dist, 
                             amount = .$med_amnt))
   }))
+```
+
+# finding AUC
+```{r}
+# first step - using Erin calculous calculator (and WolframAlpha), the integral of this discount function is:
+# V/k*ln(abs(1+k*n))+c -> we don't really care about c for AUC.
+
+# define V and k from the code above
+k=opt1$par[2]
+V=opt1$par[1]
+
+#Evaluate for upper bound
+up=V/k*log(abs(1+k*100))
+lower=V/k*log(abs(1+k*0))
+
+AUC=up-lower
+log(AUC)
 ```
 
