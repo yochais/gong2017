@@ -301,17 +301,99 @@ opt1 #-> first par= V, second par=k
 
 # get predictions on test case
 data_subset$pred <- discount(V = 46, k = .02,
-                             N = data_subset$soc_dist)    
+                             N = data_subset$soc_dist)
+
+#Get R^2 for predictions and data
+cor1=cor.test(data_subset$med_amnt, data_subset$pred)
+(cor1$estimate)^2 #-> R^2 value
 
 ## run for each age group, donation and kinship combination ##
-# check out the `purrr` package
-d %>%
-  group_by(age_grp, kinship, donation) %>%
-  do(optim(c(100, .2), function(x) {
-    return(data_vs_discount(V = x[1], k = x[2],  
-                            N = .$soc_dist, 
-                            amount = .$med_amnt))
-  }))
+#create empty vectors to store values
+age_grp=vector(mode="character",length=0); donation=vector(mode="character",length=0); kinship=vector(mode="character",length=0); V_values=vector(mode="numeric",length=0); k_values=vector(mode="numeric",length=0); RMSE=vector(mode="numeric",length=0); R_sq=vector(mode="numeric",length=0)
+
+#run for each age group, exctract values for donation * kinship conditions
+for(i in unique(d$age_grp)){
+  
+  d_mon_rel=d%>%filter(age_grp==i, donation=="mon", kinship=="rel") #-> create temp df to get values from
+  age_grp=c(age_grp,i) #-> store the appropriate age group
+  donation=c(donation, "mon") #-> store the appropriate donation
+  kinship=c(kinship, "rel") #-> store the appropriate kinship
+  optim_discount_wrapper <- function(x) { #-> define discount wrapper to get V, k, and RMSE values for this                                                      condition
+  return(data_vs_discount(V = x[1], k = x[2],  
+                          N = d_mon_rel$soc_dist, 
+                          amount = d_mon_rel$med_amnt))
+}
+
+  opt1=optim(c(100, .2), optim_discount_wrapper) #-> run discount_wrapper
+  V_values=c(V_values,opt1$par[1]) #-> store resulting V_value
+  k_values=c(k_values, opt1$par[2]) #-> store resulting k_value
+  RMSE=c(RMSE, opt1$value) #-> store resulting RMSE value
+  d_mon_rel$pred=discount(V = opt1$par[1], k = opt1$par[2],N = d_mon_rel$soc_dist) #-> store predictions in temp                                                                                          dataset
+  cor1=cor.test(d_mon_rel$med_amnt, d_mon_rel$pred) #-> run cor.test to get correlation of predictions and data
+  R_sq=c(R_sq, (cor1$estimate)^2) #-> square the estimate (pearson's R) to get R^2.
+  
+  
+  d_mon_nonrel=d%>%filter(age_grp==i, donation=="mon", kinship=="nonrel") #-> do all of this for the next donation                                                                               * Kinship condition
+  age_grp=c(age_grp,i)
+  donation=c(donation, "mon")
+  kinship=c(kinship, "nonrel")
+  optim_discount_wrapper <- function(x) {
+  return(data_vs_discount(V = x[1], k = x[2],  
+                          N = d_mon_nonrel$soc_dist, 
+                          amount = d_mon_nonrel$med_amnt))
+}
+
+  opt2=optim(c(100, .2), optim_discount_wrapper)
+  V_values=c(V_values,opt2$par[1])
+  k_values=c(k_values, opt2$par[2])
+  RMSE=c(RMSE, opt2$value)
+  d_mon_nonrel$pred=discount(V = opt2$par[1], k = opt2$par[2],N = d_mon_nonrel$soc_dist)
+  cor2=cor.test(d_mon_nonrel$med_amnt, d_mon_nonrel$pred)
+  R_sq=c(R_sq, (cor2$estimate)^2)
+
+
+  d_time_rel=d%>%filter(age_grp==i, donation=="time", kinship=="rel")
+  age_grp=c(age_grp,i)
+  donation=c(donation, "time")
+  kinship=c(kinship, "rel")
+  optim_discount_wrapper <- function(x) {
+  return(data_vs_discount(V = x[1], k = x[2],  
+                          N = d_time_rel$soc_dist, 
+                          amount = d_time_rel$med_amnt))
+}
+
+  opt3=optim(c(100, .2), optim_discount_wrapper)
+  V_values=c(V_values,opt3$par[1])
+  k_values=c(k_values, opt3$par[2])
+  RMSE=c(RMSE, opt3$value)
+  d_time_rel$pred=discount(V = opt3$par[1], k = opt3$par[2],N = d_time_rel$soc_dist)
+  cor3=cor.test(d_time_rel$med_amnt, d_time_rel$pred)
+  R_sq=c(R_sq, (cor3$estimate)^2)
+
+  
+  d_time_nonrel=d%>%filter(age_grp==i, donation=="time", kinship=="nonrel")
+  age_grp=c(age_grp,i)
+  donation=c(donation, "time")
+  kinship=c(kinship, "nonrel")
+  optim_discount_wrapper <- function(x) {
+  return(data_vs_discount(V = x[1], k = x[2],  
+                          N = d_time_nonrel$soc_dist, 
+                          amount = d_time_nonrel$med_amnt))
+}
+
+  opt4=optim(c(100, .2), optim_discount_wrapper)
+  V_values=c(V_values,opt4$par[1])
+  k_values=c(k_values, opt4$par[2])
+  RMSE=c(RMSE, opt4$value)
+  d_time_nonrel$pred=discount(V = opt4$par[1], k = opt4$par[2],N = d_time_nonrel$soc_dist)
+  cor4=cor.test(d_time_nonrel$med_amnt, d_time_nonrel$pred)
+  R_sq=c(R_sq, (cor4$estimate)^2)
+
+}
+
+#Add all vectors to one dataset
+med_smry=as.data.frame(cbind(age_grp, donation, kinship, V_values, k_values, R_sq, RMSE))
+
 ```
 
 # finding AUC
