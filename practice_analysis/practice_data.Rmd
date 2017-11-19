@@ -306,8 +306,10 @@ data_subset$pred <- discount(V = 46, k = .02,
 #Get R^2 for predictions and data
 cor1=cor.test(data_subset$med_amnt, data_subset$pred)
 (cor1$estimate)^2 #-> R^2 value
+```
 
-## run for each age group, donation and kinship combination ##
+# Run for each age group, donation and kinship combination
+```{r values for group medians}
 #create empty vectors to store values
 age_grp=vector(mode="character",length=0); donation=vector(mode="character",length=0); kinship=vector(mode="character",length=0); V_values=vector(mode="numeric",length=0); k_values=vector(mode="numeric",length=0); RMSE=vector(mode="numeric",length=0); R_sq=vector(mode="numeric",length=0)
 
@@ -392,8 +394,9 @@ for(i in unique(d$age_grp)){
 }
 
 #Add all vectors to one dataset
-med_smry=as.data.frame(cbind(age_grp, donation, kinship, V_values, k_values, R_sq, RMSE))
+med_smry=as.data.frame(cbind(age_grp, donation, kinship, V_values, k_values, R_sq, RMSE), row.names = F)%>%mutate(V_values=as.character(V_values), k_values=as.character(k_values), R_sq=as.character(R_sq), RMSE=as.character(RMSE))%>%mutate(V_values=as.numeric(V_values), k_values=as.numeric(k_values), R_sq=as.numeric(R_sq), RMSE=as.numeric(RMSE))
 
+kable(med_smry, digits = 2, align = "c", caption = "Estimated Parameters and Goodness-of-fit Indices of the Hyperbolic Functions, group median values")
 ```
 
 # finding AUC
