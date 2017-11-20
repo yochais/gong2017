@@ -566,3 +566,22 @@ for(i in unique(df2$subid)){
 df2=full_join(df2_mr, df2_mnr)%>%full_join(df2_tr)%>%full_join(df2_tnr)
 ```
 
+# remove outlayers
+In the original paper, Gong et al state that they treated as NA each condition that could not have been fitted using the hyperbolic discount function. They indicate that this is because the amount of donation was almost theor that same across social distances. If this issue arises, I will remove those observations as well.
+In addition, they excluded any k and AUC values that were more than +/- 3 *SD*s. I shall do the same
+```{r remove outliers}
+#mean k +3 sd
+k_high=mean(df2$k)+(3*sd(df2$k))
+k_low=mean(df2$k)-(3*sd(df2$k))
+
+AUC_high=mean(df2$AUC)+(3*sd(df2$AUC))
+AUC_low=mean(df2$AUC)-(3*sd(df2$AUC))
+
+
+df2=df2%>%filter(k<=(mean(k)+3*sd(k)) & k>=(mean(k)-3*sd(k)) & AUC<=(mean(AUC)+3*sd(AUC))& AUC>=(mean(AUC)-3*sd(AUC))) #-> retain only observations that meet criteria
+
+#check that the minimal values are not lower than k and AUC "_low"'s, and maximal not higher than "_high"'s
+min(df2$k)<k_low; max(df2$k)>k_high; min(df2$AUC)<AUC_low; max(df2$AUC)>AUC_high
+```
+
+#Run main analysis
