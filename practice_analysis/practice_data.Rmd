@@ -22,7 +22,7 @@ library(tidyverse)
 library(lavaan)
 library(car)
 library(broom)
-library(AUC)
+library(ez)
 ```
 
 #create data 
@@ -584,4 +584,71 @@ df2=df2%>%filter(k<=(mean(k)+3*sd(k)) & k>=(mean(k)-3*sd(k)) & AUC<=(mean(AUC)+3
 min(df2$k)<k_low; max(df2$k)>k_high; min(df2$AUC)<AUC_low; max(df2$AUC)>AUC_high
 ```
 
-#Run main analysis
+#AUC- main analysis
+The analysis used in the paper is a 2(age group) X 2(donation) X 2(kinship) mixed design, repeated measures ANOVA. The effects found was a main effect of age group such that older adults were less generous than younger adults ($\eta_p ^2$=0.05, F(1,134)=6.52), and a three-way interaction ($\eta_p^2$=0.03, F(1,134)=4.03). I ran the same ANOVA using the r package "ez". 
+
+```{r AUC ANOVA}
+#chack if AUC is normally distributed
+ggplot(data=df2, aes(x=AUC))+geom_histogram() #-> it looks bimodal
+ggplot(data = df2, aes(x=log(AUC)))+geom_histogram() #-> still very bimodal...
+
+#Since Gong et al., used log(AUC) for their analysis, I shall do the same
+df2$logAUC=log(df2$AUC)
+
+#Change subid to factor
+is.numeric(df2$subid) #-> true
+df2$subid=as.character(df2$subid); df2$subid=as.factor(df2$subid)
+is.factor(df2$subid)#-> true
+summary(df2$age_grp); summary(df2$donation); summary(df2$kinship) 
+
+# check that predictors are factors and AUC is numeric
+is.factor(df2$age_grp); is.factor(df2$donation); is.factor(df2$kinship) #-> age_grp yes, others no
+
+is.character(df2$donation)#-> true
+df2$donation=as.factor(df2$donation); is.factor(df2$donation)
+is.character(df2$kinship)#-> true
+df2$kinship=as.factor(df2$kinship); is.factor(df2$kinship)
+
+is.numeric(df2$logAUC)#-> True
+
+# Run mixed ANOVA (without specifying that age_grp is observed)
+anova_AUC=ezANOVA(data = df2, wid=.(subid), dv=.(logAUC), within  = .(donation, kinship), between = .(age_grp), type = 3) #-> using within_full becuase the data isn't balanced, type=3 to emulate SPSS
+
+print(anova_AUC) #-> this run only when all the cells are full (i.e without removing outliers. I'm not sure what to do in case there will be ouliers, as there are ni this simulated data...)
+```
+
+```{r remove participants}
+#One option- remove all observations of subjects with outliers
+mon_counts=df2%>%filter(donation=="mon")%>%group_by(subid)%>%summarise(AUC_obs=length(AUC), k_obs=length(k))%>%ungroup()
+min(mon_counts$AUC_obs); min(mon_counts$k_obs)#-> nothing problematic here
+
+time_counts=df2%>%filter(donation=="time")%>%group_by(subid)%>%summarise(AUC_obs=length(AUC), k_obs=length(k))%>%ungroup()
+min(time_counts$AUC_obs); min(time_counts$k_obs)#-> some subjects have only 1 obs.
+
+#create a vector with subid's of problematic participants
+p_remove_mon=c()
+p_remove_time=c()
+for (i in unique(df2$subid)){
+  temp_mon=filter(mon_counts, subid==i)
+  if(temp_mon$AUC_obs<2 | temp_mon$k_obs<2){ 
+    p_remove_mon=c(p_remove_mon,print(i))}else{p_remove_mon=p_remove_mon}
+  
+  temp_time=filter(time_counts, subid==i)
+  if(temp_time$AUC_obs<2 | temp_time$k_obs<2){ 
+    p_remove_time=c(p_remove_time,print(i))}else{p_remove_time=p_remove_time}
+}
+
+#remove thse participants
+length(p_remove_mon)
+ln_t=as.numeric(length(p_remove_time))
+df2_mon_crt=df2%>%filter(subid!=one_of(p_remove_mon))
+df2_time_crt=df2%>%filter(subid!=p_remove_time[1], subid!=p_remove_time[2], subid!=p_remove_time[3], subid!=p_remove_time[4], subid!=p_remove_time[5], subid!=p_remove_time[6], subid!=p_remove_time[7])
+
+```
+
+```{r ANOVA AUC without problem participants}
+anova_AUC2=ezANOVA(data = df2_time_crt, wid=.(subid), dv=.(logAUC), within  = .(donation, kinship), between = .(age_grp), type = 3) #-> using within_full becuase the data isn't balanced, type=3 to emulate SPSS
+
+print(anova_AUC) #->this hacky thing works...
+```
+
