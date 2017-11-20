@@ -612,7 +612,7 @@ df2$kinship=as.factor(df2$kinship); is.factor(df2$kinship)
 is.numeric(df2$logAUC)#-> True
 
 # Run mixed ANOVA (without specifying that age_grp is observed)
-anova_AUC=ezANOVA(data = df2, wid=.(subid), dv=.(logAUC), within  = .(donation, kinship), between = .(age_grp), type = 3) #-> using within_full becuase the data isn't balanced, type=3 to emulate SPSS
+anova_AUC=ezANOVA(data = df2, wid=.(subid), dv=.(logAUC), within  = .(donation, kinship), between = .(age_grp), type = 3) #-> type=3 to emulate SPSS, indicate that age_grp is observed (rather than manipulated) to get more accurate eta_sq
 
 print(anova_AUC) #-> this run only when all the cells are full (i.e without removing outliers. I'm not sure what to do in case there will be ouliers, as there are ni this simulated data...)
 ```
@@ -639,16 +639,50 @@ for (i in unique(df2$subid)){
 }
 
 #remove thse participants
-length(p_remove_mon)
-ln_t=as.numeric(length(p_remove_time))
-df2_mon_crt=df2%>%filter(subid!=one_of(p_remove_mon))
-df2_time_crt=df2%>%filter(subid!=p_remove_time[1], subid!=p_remove_time[2], subid!=p_remove_time[3], subid!=p_remove_time[4], subid!=p_remove_time[5], subid!=p_remove_time[6], subid!=p_remove_time[7])
+df2_mon_crt=df2
+
+for(i in p_remove_mon){df2_mon_crt=df2_mon_crt%>%filter(subid!=i)}
+
+#create df with only correcr time donation values
+df2_time_crt=df2
+
+for(i in p_remove_time){df2_time_crt=df2_time_crt%>%filter(subid!=i)}
+
+
+#check that all were removed
+#money
+min(df2_mon_crt$k)<k_low; max(df2_mon_crt$k)>k_high; min(df2_mon_crt$AUC)<AUC_low; max(df2_mon_crt$AUC)>AUC_high
+
+#time
+min(df2_time_crt$k)<k_low; max(df2_time_crt$k)>k_high; min(df2_time_crt$AUC)<AUC_low; max(df2_time_crt$AUC)>AUC_high
 
 ```
 
 ```{r ANOVA AUC without problem participants}
-anova_AUC2=ezANOVA(data = df2_time_crt, wid=.(subid), dv=.(logAUC), within  = .(donation, kinship), between = .(age_grp), type = 3) #-> using within_full becuase the data isn't balanced, type=3 to emulate SPSS
+anova_AUC2=ezANOVA(data = df2_time_crt, wid=.(subid), dv=.(logAUC), within  = .(donation, kinship), between = .(age_grp), type = 3, observed = .(age_grp)) #-> using  type=3 to emulate SPSS, indicate that age_grp is observed (rather than manipulated) to get more accurate eta_sq
 
-print(anova_AUC) #->this hacky thing works...
+print(anova_AUC2) #->this hacky thing works...But mentions that this might be a problem for type 3 sum of squares.
+
+#The t-test of interest is comparing age_group AUC for time donation to relatives. Gong et al. found that older adults were more generous when donating time to relatives compared to young adults.
+stats2=ezStats(data = df2_time_crt, wid=.(subid), dv=.(logAUC), within  = .(donation, kinship), between = .(age_grp), type = 3)
 ```
+
+The main finding of interest, based on Gong et al's results was that regradless of the age "main" effect, plder adults were more generous than young adults when donating time to relatives.
+
+```{r post hoc test of interest}
+#get the appropriate dataset
+df2_tr_crt=df2_time_crt%>%filter(donation=="time", kinship=="rel")
+
+#Post-hoc comparison of interest, using Bonferroni.
+n_comparisons=2*2 #-> (there are 4 possible comparisons: old-young in both donations and both kinships)
+
+#run t.test
+t.1=t.test(data=df2_tr_crt, log(AUC)~age_grp) #-> run the test on the dataframe with only donation and time reported
+print(t.1)
+t_interest=t.1$statistic; df_interest=t.1$parameter #-> get the value of the t-statistic and degrees of freedom
+p_interest=t.1$p.value*n_comparisons #-> multiply by number of comparisons
+
+```
+
+# k values, secondary analysis
 
