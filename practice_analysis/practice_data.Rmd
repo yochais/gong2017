@@ -314,6 +314,7 @@ cor1=cor.test(data_subset$med_amnt, data_subset$pred)
 age_grp=vector(mode="character",length=0); donation=vector(mode="character",length=0); kinship=vector(mode="character",length=0); V_values=vector(mode="numeric",length=0); k_values=vector(mode="numeric",length=0); RMSE=vector(mode="numeric",length=0); R_sq=vector(mode="numeric",length=0)
 
 #run for each age group, exctract values for donation * kinship conditions
+
 for(i in unique(d$age_grp)){
   
   d_mon_rel=d%>%filter(age_grp==i, donation=="mon", kinship=="rel") #-> create temp df to get values from
@@ -414,5 +415,154 @@ lower=V/k*log(abs(1+k*0))
 
 AUC=up-lower
 log(AUC)
+```
+
+# for Individuals
+The goal here is to create a dataset which have k and AUC values for each participant in each of the 4 donation * kinship conditions. As a second step, Age group affiliation as well as demographics data should be added to this dataset.
+
+```{r create dataframe}
+#Create the empty dataframe, in which each participant have 4 rows
+df2=data.frame(cbind(
+  subid=rep(unique(og_lng$subid),4),
+  age_grp=c(),
+  gender=c(),
+  edu_lv=c(),
+  incm_lv=c(),
+  num_friends=c(),
+  num_relatives=c(),
+  kinship=c(),
+  donation=c(),
+  k=c(),
+  AUC=c()
+))
+
+#Fill in values for demographics (age, age group, gender, education, income, num_friends, num_relatives)
+for (i in unique(df2$subid)){
+  df_sub=filter(df_og, subid==i)
+  df2[df2$subid==i, 'age']=df_sub$age
+  df2[df2$subid==i, 'age_grp']=df_sub$age_grp
+  df2[df2$subid==i, 'gender']=df_sub$gender
+  df2[df2$subid==i, 'edu_lv']=df_sub$edu_lv
+  df2[df2$subid==i, 'incm_lv']=df_sub$incm_lv
+  df2[df2$subid==i, 'num_friends']=df_sub$num_friends
+  df2[df2$subid==i, 'num_relatives']=df_sub$num_relatives
+}
+```
+
+```{r get k and AUC values}
+#for each age individual, exctract values for donation * kinship conditions
+
+#set varaible soc_dist in og_lng to be numeric
+og_lng$soc_dist=as.character(og_lng$soc_dist)
+og_lng$soc_dist=as.numeric(og_lng$soc_dist)
+is.numeric(og_lng$soc_dist)
+
+#Create 4 temporary df's to store values from each iteration
+df2_mr=df2[1:108,] #-> for money_relative
+df2_mnr=df2[109:216,] #->for money_nonrelative
+df2_tr=df2[217:324,] #->for time_relative
+df2_tnr=df2[325:432,] #->for time_nonrel
+
+#rub discount wrapper for each subject in 2*2 conditions
+for(i in unique(df2$subid)){
+  #money relative
+  d_mon_rel=og_lng%>%filter(subid==i, donation=="mon", kinship=="rel") #-> create temp df to get values from
+  df2_mr[df2_mr$subid==i, 'donation']="mon" #-> store the appropriate donation
+  df2_mr[df2_mr$subid==i, 'kinship']="rel" #-> store the appropriate kinship
+  
+  optim_discount_wrapper <- function(x) { #-> define discount wrapper to get V, k, and RMSE values for this                                                      condition
+  return(data_vs_discount(V = x[1], k = x[2],  
+                          N = d_mon_rel$soc_dist, 
+                          amount = d_mon_rel$amount))
+}
+
+  opt1=optim(c(100, .2), optim_discount_wrapper) #-> run discount_wrapper
+  df2_mr[df2_mr$subid==i, 'k']=opt1$par[2] #-> store resulting k_value
+
+  # Get AUC value 
+  k=opt1$par[2]
+  V=opt1$par[1]
+
+  #Evaluate for upper bound
+  up=V/k*log(abs(1+k*100))
+  lower=V/k*log(abs(1+k*0))
+
+  df2_mr[df2_mr$subid==i,'AUC']=up-lower
+  
+#money nonrelative
+  d_mon_nonrel=og_lng%>%filter(subid==i, donation=="mon", kinship=="nonrel") 
+  df2_mnr[df2_mnr$subid==i, 'donation']="mon" 
+  df2_mnr[df2_mnr$subid==i, 'kinship']="nonrel" 
+  
+  optim_discount_wrapper <- function(x) { 
+  return(data_vs_discount(V = x[1], k = x[2],  
+                          N = d_mon_nonrel$soc_dist, 
+                          amount = d_mon_nonrel$amount))
+}
+
+  opt2=optim(c(100, .2), optim_discount_wrapper) 
+  df2_mnr[df2_mnr$subid==i, 'k']=opt2$par[2] 
+
+  # Get AUC value 
+  k=opt2$par[2]
+  V=opt2$par[1]
+
+  #Evaluate for upper bound
+  up=V/k*log(abs(1+k*100))
+  lower=V/k*log(abs(1+k*0))
+
+  df2_mnr[df2_mnr$subid==i,'AUC']=up-lower
+  
+#time relative
+  d_time_rel=og_lng%>%filter(subid==i, donation=="time", kinship=="rel")
+  df2_tr[df2_tr$subid==i, 'donation']="time" 
+  df2_tr[df2_tr$subid==i, 'kinship']="rel" 
+  
+  optim_discount_wrapper <- function(x) { 
+  return(data_vs_discount(V = x[1], k = x[2],  
+                          N = d_time_rel$soc_dist, 
+                          amount = d_time_rel$amount))
+}
+
+  opt3=optim(c(100, .2), optim_discount_wrapper) 
+  df2_tr[df2_tr$subid==i, 'k']=opt3$par[2] 
+
+  # Get AUC value 
+  k=opt3$par[2]
+  V=opt3$par[1]
+
+  #Evaluate for upper bound
+  up=V/k*log(abs(1+k*100))
+  lower=V/k*log(abs(1+k*0))
+
+  df2_tr[df2_tr$subid==i,'AUC']=up-lower
+  
+#time nonrelative
+  d_time_nonrel=og_lng%>%filter(subid==i, donation=="time", kinship=="nonrel")
+  df2_tnr[df2_tnr$subid==i, 'donation']="time" 
+  df2_tnr[df2_tnr$subid==i, 'kinship']="nonrel" 
+  
+  optim_discount_wrapper <- function(x) { 
+  return(data_vs_discount(V = x[1], k = x[2],  
+                          N = d_time_nonrel$soc_dist, 
+                          amount = d_time_nonrel$amount))
+}
+
+  opt4=optim(c(100, .2), optim_discount_wrapper) 
+  df2_tnr[df2_tnr$subid==i, 'k']=opt4$par[2] 
+
+  # Get AUC value 
+  k=opt4$par[2]
+  V=opt4$par[1]
+
+  #Evaluate for upper bound
+  up=V/k*log(abs(1+k*100))
+  lower=V/k*log(abs(1+k*0))
+
+  df2_tnr[df2_tnr$subid==i,'AUC']=up-lower
+}
+
+#Comnibe all into one dataframe (df2)
+df2=full_join(df2_mr, df2_mnr)%>%full_join(df2_tr)%>%full_join(df2_tnr)
 ```
 
