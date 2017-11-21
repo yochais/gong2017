@@ -630,11 +630,11 @@ p_remove_mon=c()
 p_remove_time=c()
 for (i in unique(df2$subid)){
   temp_mon=filter(mon_counts, subid==i)
-  if(temp_mon$AUC_obs<2 | temp_mon$k_obs<2){ 
+  if(temp_mon$AUC_obs<2){ 
     p_remove_mon=c(p_remove_mon,print(i))}else{p_remove_mon=p_remove_mon}
   
   temp_time=filter(time_counts, subid==i)
-  if(temp_time$AUC_obs<2 | temp_time$k_obs<2){ 
+  if(temp_time$AUC_obs<2){ 
     p_remove_time=c(p_remove_time,print(i))}else{p_remove_time=p_remove_time}
 }
 
@@ -651,10 +651,10 @@ for(i in p_remove_time){df2_time_crt=df2_time_crt%>%filter(subid!=i)}
 
 #check that all were removed
 #money
-min(df2_mon_crt$k)<k_low; max(df2_mon_crt$k)>k_high; min(df2_mon_crt$AUC)<AUC_low; max(df2_mon_crt$AUC)>AUC_high
+min(df2_mon_crt$AUC)<AUC_low; max(df2_mon_crt$AUC)>AUC_high
 
 #time
-min(df2_time_crt$k)<k_low; max(df2_time_crt$k)>k_high; min(df2_time_crt$AUC)<AUC_low; max(df2_time_crt$AUC)>AUC_high
+min(df2_time_crt$AUC)<AUC_low; max(df2_time_crt$AUC)>AUC_high
 
 ```
 
@@ -665,6 +665,7 @@ print(anova_AUC2) #->this hacky thing works...But mentions that this might be a 
 
 #The t-test of interest is comparing age_group AUC for time donation to relatives. Gong et al. found that older adults were more generous when donating time to relatives compared to young adults.
 stats2=ezStats(data = df2_time_crt, wid=.(subid), dv=.(logAUC), within  = .(donation, kinship), between = .(age_grp), type = 3)
+stats2
 ```
 
 The main finding of interest, based on Gong et al's results was that regradless of the age "main" effect, plder adults were more generous than young adults when donating time to relatives.
@@ -684,5 +685,146 @@ p_interest=t.1$p.value*n_comparisons #-> multiply by number of comparisons
 
 ```
 
-# k values, secondary analysis
+#AUC plots
+```{r AUC plots}
+#log AUC values, by age group for each donation*kinship condition
+mean_and_ci <- df2_time_crt %>% #-> to get mean log(AUC) values and 95% C.Is in each condition
+  group_by(age_grp, donation, kinship) %>% 
+  summarise(n = n(),
+            mean = mean(log(AUC)),
+            ci_lower = mean - qt(0.975, df = n-1) * sd(log(AUC))/sqrt(n),
+            ci_upper = mean + qt(0.975, df = n-1) * sd(log(AUC))/sqrt(n)) 
+mean_and_ci
 
+mean_and_ci$age_grp=as.factor(mean_and_ci$age_grp)
+mean_and_ci$donation=as.factor(mean_and_ci$donation)
+mean_and_ci$kinship=as.factor(mean_and_ci$kinship)
+
+
+#Plot
+AUC_plots=ggplot(data = df2_time_crt, aes(x=age_grp, y=log(AUC),color=age_grp))+
+  geom_point(position="jitter",alpha=0.3)+
+  stat_summary(fun.y = "mean", geom="bar", alpha=0.3)+
+  ylim(7.5,9)+
+  geom_pointrange(data=mean_and_ci, aes(y=mean,ymin = ci_lower, ymax = ci_upper),color = "black",size=0.7, alpha=0.6)+
+  facet_grid(kinship~donation)+
+  ggthemes::theme_few()
+AUC_plots
+
+```
+
+
+# k values, secondary analysis
+```{r AUC ANOVA}
+#chack if AUC is normally distributed
+ggplot(data=df2, aes(x=k))+geom_histogram() #-> positive skew
+ggplot(data = df2, aes(x=log(k)))+geom_histogram() #-> much better
+
+#Since Gong et al., used log(k) for their analysis, I shall do the same
+df2$log_k=log(df2$k)
+
+
+# check that k and log_k are numeric
+is.numeric(df2$k);is.numeric(df2$log_k)#-> True, True
+
+# Run mixed ANOVA (without specifying that age_grp is observed)
+anova_k=ezANOVA(data = df2, wid=.(subid), dv=.(log_k), within  = .(donation, kinship), between = .(age_grp), type = 3) #-> type=3 to emulate SPSS, indicate that age_grp is observed (rather than manipulated) to get more accurate eta_sq
+
+print(anova_k) #-> this run only when all the cells are full (i.e without removing outliers. I'm not sure what to do in case there will be ouliers, as there are ni this simulated data...)
+```
+
+```{r k values check for problem participants}
+min(mon_counts$k_obs) #-> no problem with money donations
+min(time_counts$k_obs) #-> some participants have problematic (+/- 3s.d) time discount rates
+
+#create a vector with subid's of problematic participants
+p_remove_mon=c()
+p_remove_time=c()
+for (i in unique(df2$subid)){
+  temp_mon=filter(mon_counts, subid==i)
+  if(temp_mon$k_obs<2){ 
+    p_remove_mon=c(p_remove_mon,print(i))}else{p_remove_mon=p_remove_mon}
+  
+  temp_time=filter(time_counts, subid==i)
+  if(temp_time$k_obs<2){ 
+    p_remove_time=c(p_remove_time,print(i))}else{p_remove_time=p_remove_time}
+}
+
+#remove thse participants
+df2_mon_crt=df2
+
+for(i in p_remove_mon){df2_mon_crt=df2_mon_crt%>%filter(subid!=i)}
+
+#create df with only correcr time donation values
+df2_time_crt=df2
+
+for(i in p_remove_time){df2_time_crt=df2_time_crt%>%filter(subid!=i)}
+```
+
+```{r k values ANOVA}
+anova_k=ezANOVA(data = df2_time_crt, wid=.(subid), dv=.(log_k), within  = .(donation, kinship), between = .(age_grp),observed = .(age_grp), type = 3) #-> type=3 to emulate SPSS, indicate that age_grp is observed (rather than manipulated) to get more accurate eta_sq
+
+print(anova_k) #-> comment main results (Gong et al. found sig. age_grp*donation interaction (as well as kinship*donation which is not of interest)
+```
+
+```{r k values post-hoc t-tests}
+#Gong et al found that there was no difference in discounting for time donations regardless of kinship, but that older adults discounted money donation more so than yound adults, in both donation conditions
+
+#get the appropriate datasets-
+df2_mr_crt=df2_time_crt%>%filter(donation=="mon", kinship=="rel")
+df2_mnr_crt=df2_time_crt%>%filter(donation=="mon", kinship=="nonrel")
+df2_tr_crt=df2_time_crt%>%filter(donation=="time", kinship=="rel")
+df2_tnr_crt=df2_time_crt%>%filter(donation=="time", kinship=="nonrel")
+
+#Post-hoc comparison of interest, using Bonferroni.
+n_comparisons=2*2 #-> (there are 4 possible comparisons: old-young in both donations and both kinships)
+
+##run t.tests
+#money, relatives
+t.2a=t.test(df2_mr_crt$log_k~df2_mr_crt$age_grp)
+print(t.2a)
+pt.2a=t.2a$p.value*n_comparisons
+
+#money, nonrelatives
+t.2b=t.test(df2_mnr_crt$log_k~df2_mnr_crt$age_grp)
+print(t.2b)
+pt.2b=t.2b$p.value*n_comparisons
+
+#time, relatives
+t.2c=t.test(df2_tr_crt$log_k~df2_tr_crt$age_grp)
+print(t.2c)
+pt.2c=t.2c$p.value*n_comparisons
+
+#time, nonrelatives
+t.2d=t.test(df2_tnr_crt$log_k~df2_tnr_crt$age_grp)
+print(t.2d)
+pt.2d=t.2d$p.value*n_comparisons
+```
+
+#k plots
+```{r k plots}
+#log k values, by age group for each donation*kinship condition
+mean_and_ci <- df2_time_crt %>% #-> to get mean log(AUC) values and 95% C.Is in each condition
+  group_by(age_grp, donation, kinship) %>% 
+  summarise(n = n(),
+            mean = mean(log(k)),
+            ci_lower = mean - qt(0.975, df = n-1) * sd(log(AUC))/sqrt(n),
+            ci_upper = mean + qt(0.975, df = n-1) * sd(log(AUC))/sqrt(n)) 
+mean_and_ci
+
+mean_and_ci$age_grp=as.factor(mean_and_ci$age_grp)
+mean_and_ci$donation=as.factor(mean_and_ci$donation)
+mean_and_ci$kinship=as.factor(mean_and_ci$kinship)
+
+
+#Plot
+k_plots=ggplot(data = df2_time_crt, aes(x=age_grp, y=log(k),color=age_grp))+
+  geom_point(position="jitter",alpha=0.3)+
+  stat_summary(fun.y = "mean", geom="bar", alpha=0.3)+
+  ylim(-6,-2.7)+
+  geom_pointrange(data=mean_and_ci, aes(y=mean,ymin = ci_lower, ymax = ci_upper),color = "black",size=0.7, alpha=0.6)+
+  facet_grid(kinship~donation)+
+  ggthemes::theme_few()
+k_plots
+
+```
