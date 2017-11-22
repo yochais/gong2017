@@ -57,25 +57,61 @@ Participants then completed the Chinese version of the Alzheimer’s Disease Ass
 
 Participants then proceeded to the hypothetical donation task reported above. 
 
+**For the replication attempt**- In order to recruit participants on Amazon's Mechanical Turk, two surveys were set on using the Qualtrics platform. one survey was desigend to allow only people who indicate their age as being over 60 to take the survey, while the other was designed to allow only those who indicate their age as being under 35 to proceed to the survey. Participants who accept the HIT, are compensated \$0.1 for taking the short demographic survey (including age and the demographic variables detailed above), and could opt to recieve a bonus payment of \$1.21 by completeing the experimental task. 
+
+**links to working surveys**: 
+
+[Older adults](https://stanforduniversity.qualtrics.com/jfe/form/SV_1G5Gp4eys77yAHr)
+
+[Younger adults](https://stanforduniversity.qualtrics.com/jfe/form/SV_1QYqUm51SjqaQfP) 
+
 ###Analysis Plan
+As a result of the replication study being done online, the two datasets (one with data from older participants and another with younger participants' data) first have to be merged. After this merger, the analysis proceeds as follows:
 
-Can also quote directly, though it is less often spelled out effectively for an analysis strategy section.  The key is to report an analysis strategy that is as close to the original - data cleaning rules, data exclusion rules, covariates, etc. - as possible.  
+The analysis is based on fitting hyperbolic discount curves for each individual in each of the 2(donation form) X 2(kinship) conditions. This is done first on the group median values to assess the overall appropriateness of the function. 
 
-**Clarify key analysis of interest here**  You can also pre-specify additional analyses you plan to do.
+> "To analyze the donation data, we first modeled the group donation data. For each age × donation form × kinship cell, a hyperbolic discount function (i.e., Equation 1) was fit to the group median values (Jones & Rachlin, 2006; Rachlin & Jones, 2007, 2008) over the seven social distances (N = 1, 2, 5, 10, 20, 50, and 100):
+
+> $\nu$ = V / (1 + $\kappa$N) $_{(1)}$
+
+> where V is the undiscounted reward value, v is the reward value that a person would like to forgo for the benefit for someone at a social distance N, and k is a constant indexing degree of social discounting (i.e., discount rate) across social distances. Following the convention of the literature, group median values instead of mean values were used"
+
+After assuring that the hypoerbolic discount curve fit the group data well by computing the Root Mean Square Error (RMSE) and variance explaines ($R^2$), the same curve is fit for each participant, extracting the values for Area under the curve (*AUC*) as an indicator of overall generosity, and discount rate ($\kappa$):
+
+> "Once the appropriateness of the hyperbolic discount function was confirmed for group data, we then conducted the same fitting process to individual data to get the discount rate ($\kappa$) and the *AUC* for each participant under different conditions. Again following the convention of the literature, individual data that did not fit the hyperbolic discount function were excluded from further analyses (Vuchinich & Simpson, 1998). The individuals’ $\kappa$ and *AUC* values were then normalized by a natural logarithm transformation (e.g., Margittai et al., 2015), and transformed values that exceeded ±3 SDs were treated as outliers."
+
+The individual *AUC* and $\kappa$ values are then entered to a dataset comprising of 4 rows per participant corresponding to the four 2X2 cells. To analyze these data:
+
+> "the transformed individual *AUC* values and $\kappa$ values were submitted respectively to a 2 (age: younger and older) × 2 (donation form: money and time) × 2 (kinship: relatives and nonrelatives) mixed design, repeated measures ANOVA (and post hoc tests), with and without controlling for demographic variables"
+
+**Key analysis of interest-** The mixed design repeated measure ANOVA of *AUC* values is the main interest for the purpose of this replication, with the post hoc test comparing older and younger adults' *AUC* values when donating time to relatives. 
+
+"Main" effect of age will be taken as the affect of Age when controlling for all other main independent variables and their interactions (type III sum of squares, as is typically used in Statistical programs). The authors did not specify the type of post-hoc test used to examine group differences in each condition. Since there are relatively few (4) pairwise comparisons in this test, and out of desire to be cautious, I will use the Bonferroni correction to deterimine the statistical significance of this test.
+Though not of main interest for this replication, I will also run the same ANOVA and post-hoc procedures on individual $\kappa$ values.
+
 
 ###Differences from Original Study
 
-Explicitly describe known differences in sample, setting, procedure, and analysis plan from original study.  The goal, of course, is to minimize those differences, but differences will inevitably occur.  Also, note whether such differences are anticipated to make a difference based on claims in the original article or subsequent published research on the conditions for obtaining the effect.
+This replication is different form the original study in a number of ways: 
 
+First, the original study sampled Honk-Kong Chinese, which might have different prosocial behavior patterns than U.S citizens. However, the authors did not state in their study that their result should only extend to a particular cultural/ethnic group. 
+
+Second, as noted above, the amount of money participants are instructed to imagine having is different in relative terms. 100 thousand Hong Kong dollars are considerably less valuable (in terms of purchase power) then 100 thousand U.S dollars, even when adjusting to the difference in cost of living between the two countries. However, as stated, the primary author of the original paper instructed the author of this replication to keep the value to 100 thousand and change only the currency. 
+
+Third, the original study was conducted in lab and included a cognitive assesment procedure. The replication is taking place on Amazon's mechanical Turk and does not include cognitive assessment. The decision to drop this assesment was made since the original paper did not find a relationship between performance and cognitive ability, and the first author of the original paper stated in a personal communication that he does not think that this procedure would alter participants' mindsets. 
+
+
+```{r include=FALSE}
 ### Methods Addendum (Post Data Collection)
+#You can comment this section out prior to final report with data collection.
+```
 
-You can comment this section out prior to final report with data collection.
 
 #### Actual Sample
-  Sample size, demographics, data exclusions based on rules spelled out in analysis plan
+  In Pilot A, reported here, responses of `r 6+14` potential participants were recorded. In order to pilot the data cleaning procedures, some of the participants purposefully provided answers that rendered them ineligible. The final sample consisted of 3 non-naive older participants and 3 non-naive younger participants.
 
 #### Differences from pre-data collection methods plan
-  Any differences from what was described as the original plan, or “none”.
+Since this pilot was not done through Amazon Mechanical Turk, possible issues with interacting with that platform for not tested.
 
 
 ##Results
