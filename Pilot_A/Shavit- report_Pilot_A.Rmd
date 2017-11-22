@@ -19,6 +19,7 @@ output:
 
 ##Methods
 
+
 ###Power Analysis
 
 Original effect size, power analysis for samples to achieve 80%, 90%, 95% power to detect that effect size.  Considerations of feasibility for selecting planned sample size.
