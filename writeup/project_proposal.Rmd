@@ -1,0 +1,50 @@
+---
+title: "Project Proposal"
+author: "Yochai Shavit"
+date: "October 8th, 2017"
+output:
+  html_document:
+    toc: yes
+  pdf_document:
+    toc: yes
+---
+```{r load packages, echo=FALSE}
+library(knitr)
+library(broom)
+```
+
+#Choice of study
+### Background
+The number of older adults in the U.S as well as their share of the population (Vincent & Velkoff, 2010) challenges communities and policy makers to make use of older adults’ “human capital”- their wisdom, experience, and skills (Carr, Rowe and Kahn, 2015). A primary avenue through which such “productive engagement” is sought is volunteer work (Morrow-Howell & Greenfield, 2016).  Socioemotional Selectivity Theory (SST- Carstensen, 2006) postulates that due to a sense of limited time left in life older adults are motivated to engage with meaningful activities over ones that might provide future benefits. Yet, despite being thought of as a meaningful activity (Greenfield & Marks, 2004), older adults do not volunteer in higher rates compared to younger cohorts (U.S Bureau of Labor, 2015). The relatively low volunteer rates among older adults is especially surprising since laboratory experiments found that older adults show more prosocial behaviors compared to younger adults, and are more concerned with the wellbeing of others in need (Sze, Gyurak, Goodkind, &  Levenson, 2012; Beadle, Sheehan, Dahlben, & Gutchess, 2013;  Hubbard, Harbaugh, Srivastava, Degras, & Mayr, 2016) The primary goal of my research program is to reconcile the discrepancy between theoretical expectations based on SST and older adults’ volunteer rates, and provide possible interventions to increase the number of older adult volunteers.
+
+### Rationale
+A recent study by Gong, Zhang, & Fung (2017) provides an interesting possible explanation. In their study of younger (N=89) and older (N=66) Hong Kong Chinese community members, they ask participants to indicate how much money and time they are hypothetically willing to donate to a person in need, with this person being progressively more socially distant to them. Gong et al. find that older adults are overall willing to give less of their time and money to others compared to young adults, but that they also have higher discounting rates of such donations as a function of social distance (compared to young adults). If true, this might explain why older adults are not more likely to volunteer- because older adults are not especially willing to donate their time to others in need, and what might make them more inclined to volunteer- framing volunteering as something that could benefit close others. Having said that, the study was conducted in Hong Kong, which might limit its generalizability to western societies. A replication of the results in a relevant cultural context is needed. In addition, the authors do not use conventional age-group divisions (18-44 for the young group when traditionally the cut-off is around 35; 60-84 for the older adults group when the convention for the lower bound is 65), and the reported effect sizes are smaller than those used to determine the sample size (partial eta-squares 0.3-0.5), highlighting the importance of a well-powered replication.
+
+# Stimuli and procedures
+This study involves a simple procedure, which can be carried out through an online survey platform:
+
+* Older and younger adults are recruited and asked to imagine a hypothetical list of 100 Relatives (and another one of 100 non-relatives) in a descending order of closeness. The precise wording of all task-instructions is provided in the paper.
+
+* They are then asked to imagine that the person position 1st in the list is hospitalized and requires donations of time and money. Given that the participant had 100 thousand HK dollars and 100 days of vacation, how much money (in dollars) and time (in days) would they be willing to donate. This process is then repeated for the 2nd, 5th, 10th, 20th, and 50th people in the hypothetical list.
+
+* Participants report important demographic information (Number of important relatives/friends, years of education, household income). They are also asked to complete a cognitive assessment tool- the cognitive subscale of the Alzheimer’s Disease Assessment Scale. 
+
+* A hyperbolic function is fitted for each participant in each condition, based on the group's median value. This process results in how much money/time they are willing to donate overall (measured as Area Under the Curve-*AUC*) and what is their discount rate ($\kappa$) in each of the four conditions (Relative-Money, Relative-Time, Non relative-Money, and Non relative-Time). 
+
+    * *AUC* represent the overall amount of donation, which can be understood as general pro-social tendency
+  
+    * $\kappa$ illustrates the degree to which people in different age groups are selective in their pro-social behavior.
+
+* These values are then submitted to a 2X2X2 mixed design ANOVA (with and without covariates) to assess the effects of age group, kinship, donation type and their interactions. This process is done for *AUC* and $\kappa$ separately.
+
+# Possible challanges
+
+1.	The study requires selectively recruiting younger and older adults, which is typically harder in online recruiting platforms. Prolific offers an option to filter participants by demographic variables, but the number of older participants in their pool is relatively low (roughly 3% of the participants pool). This might increase the time needed for participant recruitment.
+
+2.	The authors do not detail the order in which primary and control variables were collected, which may lead to biases in responses. The authors would have to be contacted to confirm.
+
+3.	The analysis requires fitting a hyperbolic function to aggregated data, which was carried out in Matlab (version 2015a). An R tool allowing for a similar computation would be needed.
+
+4.	I would need to convert the amount of money participants hypothetically have so that it would have a similar meaning in terms of U.S dollars while retaining simplicity (as of Oct. 8th, $100,000 HK is worth $12,810.88 US).
+
+
