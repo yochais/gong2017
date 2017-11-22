@@ -1,0 +1,148 @@
+---
+title: "Pilot_A"
+author: "Yochai Shavit"
+date: "November 20, 2017"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = F)
+```
+
+The goal of this code is to make sure the "practice" code work from data as downloaded from Qualtrics, and make any code adjustments if necessary. 
+
+```{r set wd, include=FALSE}
+getwd()
+```
+
+
+#load packages
+```{r packages}
+library(knitr)
+library(tidyverse)
+library(ggplot2)
+library(car)
+library(ez)
+library(broom)
+library(pander)
+```
+
+#load data
+```{r data}
+df_old=read.csv("Pilot_A_older_raw.csv")
+df_young=read.csv("Pilot_A_young_raw.csv")
+```
+
+```{r clean Qualtrics}
+## df_old
+colnames(df_old) <- as.character(unlist(df_old[1,]))
+df_old=df_old[-c(1,2),]
+
+#varaibles to remove
+vars_remove=c('Start Date', 'End Date', 'Response Type', 'IP Address', 'Progress', 'Duration (in seconds)', 'Finished', 'Recorded Date', 'Recipient Last Name', 'Recipient First Name', 'Recipient Email','External Data Reference', 'Location Latitude', 'Location Longitude', 'Distribution Channel', 'User Language', 'issues_not_eligible', 'issues_not_interested', 'gender - Other: - Text', 'race - Other: - Text', 'issues_participant')
+
+df_old=df_old%>%select(-one_of(vars_remove))
+
+##df_young
+colnames(df_young) <- as.character(unlist(df_young[1,]))
+df_young=df_young[-c(1,2),]
+
+df_young=df_young%>%select(-one_of(vars_remove))
+```
+
+```{r merge data sets}
+df_og=full_join(df_old,df_young)
+
+#Retain only participants who responded "yes" to bonus_interested, and passed attention check
+df_og=df_og%>%filter(Bonus_eligible_interested=="Yes", attn_chk_20==20)
+
+#retain only vars used in analysis
+vars_remove=c('Bonus_eligible_interested', 'attn_chk_20')
+df_og=df_og%>%select(-one_of(vars_remove))
+```
+
+#Tidy data- clean vars
+```{r create rename vars, results='hide'}
+#Add age group variable
+df_og$age_grp=recode(df_og$age, "lo:35='young'; 60:hi='old'", as.factor.result = T)
+summary(df_og$age_grp) #-> 3 of each
+
+#Rename variables to be more readable
+df_og=df_og%>%rename(subid=`Response ID`, gender=`gender - Selected Choice`, race=`race - Selected Choice`)
+
+#Recode education to numeric
+df_og$edu_lv=recode(df_og$education_level, "'Primary school or lower'=1; 'Middle school'=2; 'High school'=3; 'Undergraduate (College or equivalent)'=4; 'Graduate school or higher'=5", as.numeric.result = T)
+
+#Recode subid into numbers (but still factor)
+df_og$subid=as.factor(df_og$subid)
+df_og$subid=as.numeric(df_og$subid)
+df_og$subid=as.factor(df_og$subid)
+str(df_og$subid)
+
+#Make sure all variables that should be numeric are numeric
+is.numeric(df_og$age); is.numeric(df_og$income); is.numeric(df_og$imp_relative_num); is.numeric(df_og$imp_friends_num); is.numeric(df_og$rel_1_mon); is.numeric(df_og$rel_1_time); is.numeric(df_og$nonrel_1_mon); is.numeric(df_og$nonrel_1_time)#-> All FALSE
+
+#Recode all variables that should be numeric into numeric
+df_og[,c(3,5:7,9:36)]=as.numeric(unlist(df_og[,c(3,5:7,9:36)])) #-> columns 3, 5:7 & 9:36 (all numeric vars)
+
+#check
+is.numeric(df_og$age); is.numeric(df_og$income); is.numeric(df_og$imp_relative_num); is.numeric(df_og$imp_friends_num); is.numeric(df_og$rel_1_mon); is.numeric(df_og$rel_1_time); is.numeric(df_og$nonrel_1_mon); is.numeric(df_og$nonrel_1_time)#-> all true!
+
+```
+
+#Descriptive demographics and statistics
+Measure of central tendency and age group differences as reported in the original paper
+```{r descriptives}
+#table of descpritive statistics
+dscrpt=df_og%>%group_by(age_grp)%>%summarise(male_female_ratio=paste(sum(gender=="Male"), "/", sum(gender=="Female")),
+Age_av=round(mean(age),2),Age_sd=round(sd(age),2), 
+Education_av=round(mean(edu_lv),2),Education_sd=round(sd(edu_lv),2), Household_income_av=round(mean(income),2),Household_income_sd=round(sd(income),2), sig_relatives_av=round(mean(imp_relative_num),2),sig_relatives_sd=round(sd(imp_relative_num),2), 
+sig_friends_av=round(mean(imp_friends_num),2), sig_friends_sd=round(sd(imp_friends_num),2))
+
+dscrpt2=dscrpt%>%rename('Age group'=age_grp, 'Male/Female ratio'=male_female_ratio)%>%unite('Age (m | sd)', c('Age_av', 'Age_sd'), sep=" | ")%>%unite('Education level (m | sd)', c('Education_av', 'Education_sd'), sep=" | ")%>%unite('Household income (m | sd)', c('Household_income_av', 'Household_income_sd'), sep=" | ")%>%unite('Important relatives (m | sd)', c('sig_relatives_av', 'sig_relatives_sd'), sep=" | ")%>%unite('Important friends (m | sd)', c('sig_friends_av', 'sig_friends_sd'), sep=" | ")
+
+kable(dscrpt2,align='c', caption = "decsriptive statistics by age group") 
+
+```
+
+```{r test for differences}
+#Gender (chi-square)
+gen=chisq.test(df_og$gender, df_og$age_grp, rescale.p = T, correct = F)
+#Age
+age=t.test(data=df_og, age~age_grp)
+#education level
+edu_lv=t.test(data=df_og, edu_lv~age_grp)
+#income level
+inc_lv=t.test(data=df_og,income~age_grp)
+#number of close relatives
+rel=t.test(data=df_og, imp_relative_num~age_grp)
+#number of close friends
+frnd=t.test(data=df_og,imp_friends_num~age_grp)
+
+pander(gen, digits=2, caption = "chi-square test for gender differences")
+pander(age, digits=2, caption = "age group difference in average age")
+pander(edu_lv, digits=2, caption = "age group difference in levels of education")
+pander(inc_lv, digits=2, caption = "age group difference in average income")
+pander(rel, digits=2, caption = "age group difference in average number of relatives")
+pander(frnd, digits=2, caption = "age group difference in average number of friends")
+
+```
+
+#Tidy data- long form
+data needs to be long-form for the first step, whereby each row is one trial for one subject (each subject has 14 rows (donation form * social distance), for each of the 2 kinship conditions (relative/nonrelative), resulting in 28 rows in total for 6 participants, meaning 168 observations. In addition, add age_group variable.
+```{r tidy data df_og}
+#long-form dataset
+og_lng=df_og%>%
+  gather(condition, amount,
+         rel_1_mon,rel_2_mon,rel_5_mon,rel_10_mon,rel_20_mon, rel_50_mon, rel_100_mon,
+         rel_1_time,rel_2_time,rel_5_time,rel_10_time,rel_20_time, rel_50_time, rel_100_time,
+         nonrel_1_mon,nonrel_2_mon,nonrel_5_mon,nonrel_10_mon,nonrel_20_mon, nonrel_50_mon, nonrel_100_mon,
+         nonrel_1_time,nonrel_2_time,nonrel_5_time,nonrel_10_time,nonrel_20_time, nonrel_50_time, nonrel_100_time
+         )%>%
+  separate(condition, c("kin", "soc_dist", "donation"), "_")%>%
+  spread(kin, amount)%>%
+  gather(kinship, amount,
+         rel,nonrel) #-> That works!
+```
