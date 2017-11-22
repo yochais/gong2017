@@ -194,7 +194,7 @@ print(t.test(num_friends~age_grp)))
 **Note-** These data serve, to some extent, as a simulation of the dempgraphic effects in the original paper. The fact that the simulated values for number of close friends and relatives is sometime significant and sometimes not (for both) suggests that the finding that age groups differed in number of relatives but not in number of friends is at the very least fragile. 
 
 #Tidy data
-data needs to be long-form for the first step, whereby each row is one trail for one subject (each subject has 14 rows (donation form * social distance), for each of the 2 kinship conditions (relative/nonrelative), resulting in 28 rows in total for 108 participants, meaning 3024 observations. In addition, add age_group variable.
+data needs to be long-form for the first step, whereby each row is one trial for one subject (each subject has 14 rows (donation form * social distance), for each of the 2 kinship conditions (relative/nonrelative), resulting in 28 rows in total for 108 participants, meaning 3024 observations. In addition, add age_group variable.
 ```{r tidy data df_og}
 
 #long-form dataset
