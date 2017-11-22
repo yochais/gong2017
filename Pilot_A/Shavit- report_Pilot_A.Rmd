@@ -16,25 +16,46 @@ output:
 
 
   The study I attempt to replicate by Gong, Zhang, & Fung (2017) provides a possible explanation for this apparent discrepancy. In a hypothetical donation task, Gong and colleagues asked younger (N=89) and older (N=66) Hong Kong Chinese community membersto indicate how much money and time they are willing to donate to a person in need, with this person being progressively more socially distant to them. They found: a *weak qualified* main effect ($\eta_p^2$=0.05) of age such that older adults were less generous than younger adults when averaging across donation (money or time) and kinship (relative or non-relative) types. However, they found a 3-way Age group X Donation X Kinship interaction showing that *when donating their time to relatives, older adults were more generous than younger adults*. This post-hoc test had a medium effect size (*Cohen's D*=`r round(((2*3.22)/sqrt(145)),2)`, calculated based on reported t-statistic of $t_{(145)}$=3.22). **the qualified main effect of age group and the post-hoc test suggesting that older adults are more generous than younger adults when donating time to relatives are the two target findings for this replication**. 
+  
+  In addition, their post-hoc comparisons revealed that older adults, compared to younger adults, were less generous to non-relatives in monetary donations but the groups did not differ in generousity towards relatives in this donation condition. In contrast, older adults were less generous than younger adults when donating time to non-relatives (but were more generous to relatives as noted above). 
+  
+  Gong, Zhang and Fung were also interested in comparing the social discount rate of older and younger adults in each of the conditions. They found no main effects of social discounting, and an Age group X Donation type interaction. Post-hoc tests revealed that older and younger adults' social discount rates did not differ when donating time, and that compared to younger adults older adults had higher discount rates when donating money to relatives and non-relatives alike. They conclude that their findings regarding donation amounts and social discount rates are in accord with SST- older adults are affected more than younger adults by kinship and degree of social closeness, though these effects depend on the context of giving.
 
 ##Methods
 
-
 ###Power Analysis
 
-Original effect size, power analysis for samples to achieve 80%, 90%, 95% power to detect that effect size.  Considerations of feasibility for selecting planned sample size.
+The original effect sizes of interest were: $\eta_p^2$=0.05 for the qualified main age group effect effect, and *D*=`r round(((2*3.22)/sqrt(145)),2)` for the post-hoc t-test on generosity of time donations for relatives. 
+
+Power analysis using G*Power version 3.1.2.9 suggested that in order to obtain 80%, 90% and 95% power for the main effect of age, the required sample sizes are 154, 204, and 252 respectively (details can be found here: [Age group main effect- 80% power](age_grp_main_pwr_80.png), [Age group main effect- 90% power](age_grp_main_pwr_90.png), and [Age group main effect- 95% power](age_grp_main_pwr_95.png)). 
+
+In order to obtain 80%, 90%, and 95% power to observe the stronger effect of age group on generosity in time donations to relatives (Older>Younger), requires sample sizes of 90 (45 per group), 124 (62 per group), and 156 (78 per group) respectively (details can be found here: [age group time donations, relatives- 80% power](t_test_pwr_80.png), [age group time donations, relatives- 90% power](t_test_pwr_90.png), and [age group time donations, relatives- 95% power](t_test_pwr_95.png)).
+
+**Feasability-** Since the task requires about 10 minutes to complete online, and since the required samples are somewhat large, the replication study will be powered to observe the stronger effect of age group on generosity in time donations to relatives at 80% power.
 
 ###Planned Sample
 
-Planned sample size and/or termination rule, sampling frame, known demographics if any, preselection rules if any.
+The above mentioned power calculation suggests that a sample consisting of **45 older adults** (aged 60 or older), and **45 younger adults** (aged 35 or younger) will suffice to achieve 80% to detect the effect of interest. We will rely on Amazon's mechanical Turk for data colelction, and sample only U.S residents to minimize the chance that participants do not read English.
 
 ###Materials
 
-All materials - can quote directly from original article - just put the text in quotations and note that this was followed precisely.  Or, quote directly and just point out exceptions to what was described in the original article.
+In this study, age group is treated as a between subjects independent variable. Participants in both age groups completed the same experimental task. At first, the were given the following instruction:
+
+> "The following task asks you to imagine that you have a list of 100 relatives (or non-relatives) arranged in descending order of their closeness with you. The person at position #1 is your closest relative (or non-relative), while the person at position #100 is a relative (or nonrelative) you may know but are not close at all. You do not have to actually create the list — just imagine that you have done so. Next you will be asked to answer questions regarding these relatives (or non-relatives) at a given position."
+
+Participants were then asked to indicate how much money and time they would be willing to hypothetically donate to a person in a given position (N) on that list (N=1,2,5,10,20,50, and 100). The promt read as follows:
+
+> "Imagine that the relative (or non-relative) at position N on your list is now hospitalized. He/she needs to be accompanied and taken care of in the hospital, as well as a large amount of money to pay for the medical expense. If you now own 100 thousand of Hong Kong dollars and 100 days of vacation, how much money would you donate to him/her, and how many days would you spend taking care of him/her?"
+
+These materials are used verbatim in the replication attempt, with the exception of replacing "Hong Kong dollars" with "U.S dollars". The original authors' advice was sought in order to decide whether to change the amount to the $U.S equivalent of 100 thousand Hong Kong dollars (~18 thousand U.S dollars). The first author indicated that it is better to retain the value of 100 thousand and change only the currency.
 
 ###Procedure	
 
-Can quote directly from original article - just put the text in quotations and note that this was followed precisely.  Or, quote directly and just point out exceptions to what was described in the original article.
+Participants first provided demographic information regarding their age, gender, level of education and household income. In addition, participants were asked to "*directly estimate the number of important relatives/ friends*" that they have, since this was seen as an important control variable.
+
+Participants then completed the Chinese version of the Alzheimer’s Disease Assessment Scale-Cognitive Subscale (ADAS-Cog). Since this is an in-person assesment, **this stage is not followed in the replication study**. 
+
+Participants then proceeded to the hypothetical donation task reported above. 
 
 ###Analysis Plan
 
