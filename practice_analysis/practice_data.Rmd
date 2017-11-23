@@ -219,6 +219,7 @@ write_csv(med_table,"med_table_shavit.csv")
 
 ggplot(data=med_table, aes(x=soc_dist, y=med_amnt, color=age_grp))+
   geom_point()+
+  geom_smooth(method = "lm", formula = y~poly(x,2))+
   facet_grid(donation~kinship)
 
 #for each age_grp*kinship*donation condition
@@ -270,7 +271,7 @@ data_subset <- filter(d, age_grp == "old",
 # where V is the undiscounted reward value, 
 # v is the reward value that a person would like to forgo for the benefit for someone at a social distance N, and k is a constant indexing degree of social discounting (i.e., discount rate) across social distances.
 
-# where R-square and root-mean-square error (RMSE) were used to assess the goodness of  t. 
+# where R-square and root-mean-square error (RMSE) were used to assess the goodness of  fit. 
 
 # compute the hyperbolic function
 discount <- function (V, k, N) {
@@ -283,7 +284,7 @@ discount <- function (V, k, N) {
 data_vs_discount <- function(V, k, N, amount) {
   nu <- discount(V, k, N)
   
-  RMSE <- sum(sqrt((amount - nu)^2))
+  RMSE <- sqrt(mean((amount - nu)^2))
   
   return(RMSE)
 }
@@ -300,7 +301,7 @@ opt1=optim(c(100, .2), optim_discount_wrapper)
 opt1 #-> first par= V, second par=k
 
 # get predictions on test case
-data_subset$pred <- discount(V = 46, k = .02,
+data_subset$pred <- discount(V = 48, k = .02,
                              N = data_subset$soc_dist)
 
 #Get R^2 for predictions and data
