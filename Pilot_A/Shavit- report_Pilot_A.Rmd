@@ -41,7 +41,7 @@ The above mentioned power calculation suggests that a sample consisting of **45 
 
 In this study, age group is treated as a between subjects independent variable. Participants in both age groups completed the same experimental task. At first, the were given the following instruction:
 
-> "The following task asks you to imagine that you have a list of 100 relatives (or non-relatives) arranged in descending order of their closeness with you. The person at position #1 is your closest relative (or non-relative), while the person at position #100 is a relative (or nonrelative) you may know but are not close at all. You do not have to actually create the list — just imagine that you have done so. Next you will be asked to answer questions regarding these relatives (or non-relatives) at a given position."
+> "The following task asks you to imagine that you have a list of 100 relatives (or non-relatives) arranged in descending order of their closeness with you. The person at position #1 is your closest relative (or non-relative), while the person at position #100 is a relative (or nonrelative) you may know but are not close at all. You do not have to actually create the list-- just imagine that you have done so. Next you will be asked to answer questions regarding these relatives (or non-relatives) at a given position."
 
 Participants were then asked to indicate how much money and time they would be willing to hypothetically donate to a person in a given position (N) on that list (N=1,2,5,10,20,50, and 100). The promt read as follows:
 
@@ -53,7 +53,7 @@ These materials are used verbatim in the replication attempt, with the exception
 
 Participants first provided demographic information regarding their age, gender, level of education and household income. In addition, participants were asked to "*directly estimate the number of important relatives/ friends*" that they have, since this was seen as an important control variable.
 
-Participants then completed the Chinese version of the Alzheimer’s Disease Assessment Scale-Cognitive Subscale (ADAS-Cog). Since this is an in-person assesment, **this stage is not followed in the replication study**. 
+Participants then completed the Chinese version of the Alzheimer's Disease Assessment Scale-Cognitive Subscale (ADAS-Cog). Since this is an in-person assesment, **this stage is not followed in the replication study**. 
 
 Participants then proceeded to the hypothetical donation task reported above. 
 
@@ -70,7 +70,7 @@ As a result of the replication study being done online, the two datasets (one wi
 
 The analysis is based on fitting hyperbolic discount curves for each individual in each of the 2(donation form) X 2(kinship) conditions. This is done first on the group median values to assess the overall appropriateness of the function. 
 
-> "To analyze the donation data, we first modeled the group donation data. For each age × donation form × kinship cell, a hyperbolic discount function (i.e., Equation 1) was fit to the group median values (Jones & Rachlin, 2006; Rachlin & Jones, 2007, 2008) over the seven social distances (N = 1, 2, 5, 10, 20, 50, and 100):
+> "To analyze the donation data, we first modeled the group donation data. For each age X donation form X kinship cell, a hyperbolic discount function (i.e., Equation 1) was fit to the group median values (Jones & Rachlin, 2006; Rachlin & Jones, 2007, 2008) over the seven social distances (N = 1, 2, 5, 10, 20, 50, and 100):
 
 > $\nu$ = V / (1 + $\kappa$N) $_{(1)}$
 
@@ -78,11 +78,11 @@ The analysis is based on fitting hyperbolic discount curves for each individual 
 
 After assuring that the hypoerbolic discount curve fit the group data well by computing the Root Mean Square Error (RMSE) and variance explaines ($R^2$), the same curve is fit for each participant, extracting the values for Area under the curve (*AUC*) as an indicator of overall generosity, and discount rate ($\kappa$):
 
-> "Once the appropriateness of the hyperbolic discount function was confirmed for group data, we then conducted the same fitting process to individual data to get the discount rate ($\kappa$) and the *AUC* for each participant under different conditions. Again following the convention of the literature, individual data that did not fit the hyperbolic discount function were excluded from further analyses (Vuchinich & Simpson, 1998). The individuals’ $\kappa$ and *AUC* values were then normalized by a natural logarithm transformation (e.g., Margittai et al., 2015), and transformed values that exceeded ±3 SDs were treated as outliers."
+> "Once the appropriateness of the hyperbolic discount function was confirmed for group data, we then conducted the same fitting process to individual data to get the discount rate ($\kappa$) and the *AUC* for each participant under different conditions. Again following the convention of the literature, individual data that did not fit the hyperbolic discount function were excluded from further analyses (Vuchinich & Simpson, 1998). The individuals' $\kappa$ and *AUC* values were then normalized by a natural logarithm transformation (e.g., Margittai et al., 2015), and transformed values that exceeded ±3 SDs were treated as outliers."
 
 The individual *AUC* and $\kappa$ values are then entered to a dataset comprising of 4 rows per participant corresponding to the four 2X2 cells. To analyze these data:
 
-> "the transformed individual *AUC* values and $\kappa$ values were submitted respectively to a 2 (age: younger and older) × 2 (donation form: money and time) × 2 (kinship: relatives and nonrelatives) mixed design, repeated measures ANOVA (and post hoc tests), with and without controlling for demographic variables"
+> "the transformed individual *AUC* values and $\kappa$ values were submitted respectively to a 2 (age: younger and older) X 2 (donation form: money and time) X 2 (kinship: relatives and nonrelatives) mixed design, repeated measures ANOVA (and post hoc tests), with and without controlling for demographic variables"
 
 **Key analysis of interest-** The mixed design repeated measure ANOVA of *AUC* values is the main interest for the purpose of this replication, with the post hoc test comparing older and younger adults' *AUC* values when donating time to relatives. 
 
@@ -499,10 +499,11 @@ for(i in unique(df2$subid)){
                           amount = d_mon_rel$amount))
 }
 
-  opt1=optim(c(100, .2), optim_discount_wrapper) #-> run discount_wrapper
+  opt1=optim(c(1000, .2), optim_discount_wrapper) #-> run discount_wrapper
   df2_mr[df2_mr$subid==i, 'k']=opt1$par[2] #-> store resulting k_value
 
-  # Get AUC value 
+  # Get AUC value - using Erin WolframAlpha, the integral of this discount function is:
+# V/k*ln(abs(1+k*n))+c -> we don't really care about c for AUC.
   k=opt1$par[2]
   V=opt1$par[1]
 
@@ -523,7 +524,7 @@ for(i in unique(df2$subid)){
                           amount = d_mon_nonrel$amount))
 }
 
-  opt2=optim(c(100, .2), optim_discount_wrapper) 
+  opt2=optim(c(1000, .2), optim_discount_wrapper) 
   df2_mnr[df2_mnr$subid==i, 'k']=opt2$par[2] 
 
   # Get AUC value 
@@ -547,7 +548,7 @@ for(i in unique(df2$subid)){
                           amount = d_time_rel$amount))
 }
 
-  opt3=optim(c(100, .2), optim_discount_wrapper) 
+  opt3=optim(c(1000, .2), optim_discount_wrapper) 
   df2_tr[df2_tr$subid==i, 'k']=opt3$par[2] 
 
   # Get AUC value 
@@ -571,7 +572,7 @@ for(i in unique(df2$subid)){
                           amount = d_time_nonrel$amount))
 }
 
-  opt4=optim(c(100, .2), optim_discount_wrapper) 
+  opt4=optim(c(1000, .2), optim_discount_wrapper) 
   df2_tnr[df2_tnr$subid==i, 'k']=opt4$par[2] 
 
   # Get AUC value 
@@ -589,7 +590,10 @@ for(i in unique(df2$subid)){
 df2=full_join(df2_mr, df2_mnr)%>%full_join(df2_tr)%>%full_join(df2_tnr)
 ```
 
-```{r remove outliers}
+```{r remove outliers, include=FALSE}
+#Negative AUC values (indicating a problem with the fitting process)
+df2=df2%>%filter(AUC>0)
+
 #mean k +3 sd
 k_high=mean(df2$k)+(3*sd(df2$k))
 k_low=mean(df2$k)-(3*sd(df2$k))
@@ -602,17 +606,137 @@ df2=df2%>%filter(k<=(mean(k)+3*sd(k)) & k>=(mean(k)-3*sd(k)) & AUC<=(mean(AUC)+3
 
 #check that the minimal values are not lower than k and AUC "_low"'s, and maximal not higher than "_high"'s
 min(df2$k)<k_low; max(df2$k)>k_high; min(df2$AUC)<AUC_low; max(df2$AUC)>AUC_high
+```
 
-###Exploratory analyses
+```{r AUC ANOVA, results="hide", error=FALSE}
+#check if AUC is normally distributed
+ggplot(data=df2, aes(x=AUC))+geom_histogram() #-> it looks bimodal
+ggplot(data = df2, aes(x=log(AUC)))+geom_histogram() #-> still very bimodal...
 
-Any follow-up analyses desired (not required).  
+#Since Gong et al., used log(AUC) for their analysis, I shall do the same
+df2$logAUC=log(df2$AUC)
 
-## Discussion
+#Change subid to factor
+is.numeric(df2$subid) #-> true
+df2$subid=as.character(df2$subid); df2$subid=as.factor(df2$subid)
+is.factor(df2$subid)#-> true
+summary(df2$age_grp); summary(df2$donation); summary(df2$kinship) 
 
-### Summary of Replication Attempt
+# check that predictors are factors and AUC is numeric
+is.factor(df2$age_grp); is.factor(df2$donation); is.factor(df2$kinship) #-> age_grp yes, others no
 
-Open the discussion section with a paragraph summarizing the primary result from the confirmatory analysis and the assessment of whether it replicated, partially replicated, or failed to replicate the original result.  
+is.character(df2$donation)#-> true
+df2$donation=as.factor(df2$donation); is.factor(df2$donation)
+is.character(df2$kinship)#-> true
+df2$kinship=as.factor(df2$kinship); is.factor(df2$kinship)
 
-### Commentary
+is.numeric(df2$logAUC)#-> True
 
-Add open-ended commentary (if any) reflecting (a) insights from follow-up exploratory analysis, (b) assessment of the meaning of the replication (or not) - e.g., for a failure to replicate, are the differences between original and present study ones that definitely, plausibly, or are unlikely to have been moderators of the result, and (c) discussion of any objections or challenges raised by the current and original authors about the replication attempt.  None of these need to be long.
+# Run mixed ANOVA (without specifying that age_grp is observed)
+
+#anova_AUC=ezANOVA(data = df2, wid=.(subid), dv=.(logAUC), within  = .(donation, kinship), between = .(age_grp), type = 3) #-> type=3 to emulate SPSS, indicate that age_grp is observed (rather than manipulated) to get more accurate eta_sq
+
+#print(anova_AUC) #-> this run only when all the cells are full (i.e without removing outliers. I'm not sure what to do in case there will be ouliers, as there are in this pilot...)
+```
+
+```{r remove participants, results="hide", include=FALSE}
+##One option- remove all observations of subjects with outliers
+
+#mon_counts=df2%>%filter(donation=="mon")%>%group_by(subid)%>%summarise(AUC_obs=length(AUC), k_obs=length(k))%>%ungroup()
+#min(mon_counts$AUC_obs); min(mon_counts$k_obs)#-> nothing problematic here
+
+#time_counts=df2%>%filter(donation=="time")%>%group_by(subid)%>%summarise(AUC_obs=length(AUC), k_obs=length(k))%>%ungroup()
+#min(time_counts$AUC_obs); min(time_counts$k_obs)#-> some subjects have only 1 obs.
+
+#create a vector with subid's of problematic participants
+#p_remove_mon=c()
+#p_remove_time=c()
+#for (i in unique(df2$subid)){
+ # temp_mon=filter(mon_counts, subid==i)
+  #if(temp_mon$AUC_obs<2){ 
+   # p_remove_mon=c(p_remove_mon,print(i))}else{p_remove_mon=p_remove_mon}
+  
+  #temp_time=filter(time_counts, subid==i)
+  #if(temp_time$AUC_obs<2){ 
+   # p_remove_time=c(p_remove_time,print(i))}else{p_remove_time=p_remove_time}
+#}
+
+#remove thse participants
+
+#df2_mon_crt=df2
+
+#for(i in p_remove_mon){df2_mon_crt=df2_mon_crt%>%filter(subid!=i)}
+
+#create df with only correcr time donation values
+#df2_time_crt=df2
+
+#for(i in p_remove_time){df2_time_crt=df2_time_crt%>%filter(subid!=i)}
+
+
+#check that all were removed
+#money
+#min(df2_mon_crt$AUC)<AUC_low; max(df2_mon_crt$AUC)>AUC_high
+
+#time
+#min(df2_time_crt$AUC)<AUC_low; max(df2_time_crt$AUC)>AUC_high
+
+```
+
+```{r ANOVA AUC without problem participants, include=FALSE}
+#anova_AUC2=ezANOVA(data = df2_time_crt, wid=.(subid), dv=.(logAUC), within  = .(donation, kinship), between = .(age_grp), type = 3, observed = .(age_grp)) #-> using  type=3 to emulate SPSS, indicate that age_grp is observed (rather than manipulated) to get more accurate eta_sq
+
+#print(anova_AUC2) #->this hacky thing works...But mentions that this might be a problem for type 3 sum of squares.
+```
+
+```{r post hoc test of interest, include=FALSE}
+#get the appropriate dataset
+
+#df2_tr_crt=df2_time_crt%>%filter(donation=="time", kinship=="rel")
+
+#Post-hoc comparison of interest, using Bonferroni.
+#n_comparisons=2*2 #-> (there are 4 possible comparisons: old-young in both donations and both kinships)
+
+#run t.test
+#t.1=t.test(data=df2_tr_crt, log(AUC)~age_grp) #-> run the test on the dataframe with only donation and time reported
+#print(t.1)
+#t_interest=t.1$statistic; df_interest=t.1$parameter #-> get the value of the t-statistic and degrees of freedom
+#p_interest=t.1$p.value*n_comparisons #-> multiply by number of comparisons
+
+```
+
+```{r AUC plots, include=FALSE}
+#log AUC values, by age group for each donation*kinship condition
+#mean_and_ci <- df2_time_crt %>% #-> to get mean log(AUC) values and 95% C.Is in each condition
+ # group_by(age_grp, donation, kinship) %>% 
+  #summarise(n = n(),
+   #         mean = mean(log(AUC)),
+    #        ci_lower = mean - qt(0.975, df = n-1) * sd(log(AUC))/sqrt(n),
+     #       ci_upper = mean + qt(0.975, df = n-1) * sd(log(AUC))/sqrt(n)) 
+#mean_and_ci
+
+#mean_and_ci$age_grp=as.factor(mean_and_ci$age_grp)
+#mean_and_ci$donation=as.factor(mean_and_ci$donation)
+#mean_and_ci$kinship=as.factor(mean_and_ci$kinship)
+
+
+#Plot
+#AUC_plots=ggplot(data = df2_time_crt, aes(x=age_grp, y=log(AUC),color=age_grp))+
+ # geom_point(position="jitter",alpha=0.3)+
+  #stat_summary(fun.y = "mean", geom="bar", alpha=0.3)+
+  #ylim(7.5,9)+
+  #geom_pointrange(data=mean_and_ci, aes(y=mean,ymin = ci_lower, ymax = ci_upper),color = "black",size=0.7, alpha=0.6)+
+ # facet_grid(kinship~donation)+
+  #ggthemes::theme_few()
+#AUC_plots
+
+```
+
+
+**NOTE TO INSTRUCTORS REGARDING PILOT A ANALYSES AND RESULTS**
+---------------------------------------------------------------
+
+The analyses of this study rely on having sufficient sample sizes. For example, the ANOVA won't run after removing cells from participants who's data could be fitted using the hyperbolic discount function and removing outliers as detailed in the original paper. I have outlined the code for the primary analyses of interest, and made sure it works on a large simulated dataset (Please check the "practice_analysis" repo in my "gong2017" folder on the class github account). I believe that these issues will be resolved once the full set of data is collected. In the mean time, and as assurance that this code can work, please see below the visuzlization for the AUC by condition post hoc test. 
+
+I deeply appreciate your patience...
+
+![](AUC_plots_simulated_data.png)

@@ -710,6 +710,7 @@ AUC_plots=ggplot(data = df2_time_crt, aes(x=age_grp, y=log(AUC),color=age_grp))+
   geom_pointrange(data=mean_and_ci, aes(y=mean,ymin = ci_lower, ymax = ci_upper),color = "black",size=0.7, alpha=0.6)+
   facet_grid(kinship~donation)+
   ggthemes::theme_few()
+ggsave("AUC_plots_simulated_data.png")
 AUC_plots
 
 ```
