@@ -27,9 +27,9 @@ output:
 
 The original effect sizes of interest were: $\eta_p^2$=0.05 for the qualified main age group effect effect, and *D*=`r round(((2*3.22)/sqrt(145)),2)` for the post-hoc t-test on generosity of time donations for relatives. 
 
-Power analysis using G*Power version 3.1.2.9 suggested that in order to obtain 80%, 90% and 95% power for the main effect of age, the required sample sizes are 154, 204, and 252 respectively (details can be found here: [Age group main effect- 80% power](age_grp_main_pwr_80.png), [Age group main effect- 90% power](age_grp_main_pwr_90.png), and [Age group main effect- 95% power](age_grp_main_pwr_95.png)). 
+Power analysis using G*Power version 3.1.2.9 suggested that in order to obtain 80%, 90% and 95% power for the main effect of age, the required sample sizes are 154, 204, and 252 respectively (details can be found here: [Age group main effect- 80% power](C:/Users/Yochai Shavit/Documents/GitHub/gong2017/Pilot_A/age_grp_main_pwr_80.png), [Age group main effect- 90% power](C:/Users/Yochai Shavit/Documents/GitHub/gong2017/Pilot_A/age_grp_main_pwr_90.png), and [Age group main effect- 95% power](C:/Users/Yochai Shavit/Documents/GitHub/gong2017/Pilot_A/age_grp_main_pwr_95.png)). 
 
-In order to obtain 80%, 90%, and 95% power to observe the stronger effect of age group on generosity in time donations to relatives (Older>Younger), requires sample sizes of 90 (45 per group), 124 (62 per group), and 156 (78 per group) respectively (details can be found here: [age group time donations, relatives- 80% power](t_test_pwr_80.png), [age group time donations, relatives- 90% power](t_test_pwr_90.png), and [age group time donations, relatives- 95% power](t_test_pwr_95.png)).
+In order to obtain 80%, 90%, and 95% power to observe the stronger effect of age group on generosity in time donations to relatives (Older>Younger), requires sample sizes of 90 (45 per group), 124 (62 per group), and 156 (78 per group) respectively (details can be found here: [age group time donations, relatives- 80% power](C:/Users/Yochai Shavit/Documents/GitHub/gong2017/Pilot_A/t_test_pwr_80.png), [age group time donations, relatives- 90% power](C:/Users/Yochai Shavit/Documents/GitHub/gong2017/Pilot_A/t_test_pwr_90.png), and [age group time donations, relatives- 95% power](C:/Users/Yochai Shavit/Documents/GitHub/gong2017/Pilot_A/t_test_pwr_95.png)).
 
 **Feasability-** Since the task requires about 10 minutes to complete online, and since the required samples are somewhat large, the replication study will be powered to observe the stronger effect of age group on generosity in time donations to relatives at 80% power.
 
@@ -263,7 +263,7 @@ pander(frnd, digits=2, caption = "age group difference in average number of frie
 ```
 
 
-In table 1, we compare the two age groups' demographic variables. In the original paper, older adult participants were significanlty older, less educated, and had significanlty more important relatives. There were no significant differences in income nor number of important friends (see the original table [here](gong_et_al_demog.png)).
+In table 1, we compare the two age groups' demographic variables. In the original paper, older adult participants were significanlty older, less educated, and had significanlty more important relatives. There were no significant differences in income nor number of important friends (see the original table [here](C:/Users/Yochai Shavit/Documents/GitHub/gong2017/Pilot_A/gong_et_al_demog.png)).
 
 In this small pilot,the older adult group was significantly older ($t_{(3.8)}$=`r round(age$statistic,2)`, *p*=`r round(age$p.value, 3)`) and less educated ($t_{(4)}$=`r round(edu_lv$statistic,2)`, *p*=`r round(edu_lv$p.value, 3)`). We did not find additional significant differences between the groups.
 
@@ -426,14 +426,14 @@ med_plot1=ggplot(data=med_table_plot, aes(x=soc_dist, y=med_amnt, color=`Age-Kin
 As a necessary first step, I first extracted the median donation values for each age group in each of the four donation X kinship conditions. Plotting the data, it appears that compared to the median donation values in the origianl study, values in this small pilot sample were fairly similar, yet far less variable (see figure 1).
 
 **Median donation values and hypoerboloc curve- Gong et al., 2017**
-![](gong_et_al_med_amnts.png)                              
+![](C:/Users/Yochai Shavit/Documents/GitHub/gong2017/Pilot_A/gong_et_al_med_amnts.png)                              
 
 **Figure 1- Median donation values, Pilot A**
 ```{r, echo=FALSE, warning=FALSE}
 med_plot1
 ```
 
-I proceded to fit the hyperbolic discount function to the group median donation values, with the aim of achiving similar goodness-of-fit indices to those obtained by Gong et al. As shown in table 2, the fit (assessed by $R^2$ and *RMSE*) was as good as in the original paper (see the values in the original paper [here](gong_et_al_vk.png)). The values of $V$ and $\kappa$ are somewhat arbitrary and are not meaningful in-and-of-themselves in this pilot analysis. 
+I proceded to fit the hyperbolic discount function to the group median donation values, with the aim of achiving similar goodness-of-fit indices to those obtained by Gong et al. As shown in table 2, the fit (assessed by $R^2$ and *RMSE*) was as good as in the original paper (see the values in the original paper [here](C:/Users/Yochai Shavit/Documents/GitHub/gong2017/Pilot_A/gong_et_al_vk.png)). The values of $V$ and $\kappa$ are somewhat arbitrary and are not meaningful in-and-of-themselves in this pilot analysis. 
 
 `r kable(med_smry, digits = 2, align = "c", caption = "Table 2: Parameters and Goodness-of-fit Indices of the Hyperbolic Functions, group median values")`
 
