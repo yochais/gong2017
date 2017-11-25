@@ -27,9 +27,27 @@ output:
 
 The original effect sizes of interest were: $\eta_p^2$=0.05 for the qualified main age group effect effect, and *D*=`r round(((2*3.22)/sqrt(145)),2)` for the post-hoc t-test on generosity of time donations for relatives. 
 
-Power analysis using G*Power version 3.1.2.9 suggested that in order to obtain 80%, 90% and 95% power for the main effect of age, the required sample sizes are 154, 204, and 252 respectively (details can be found here: [Age group main effect- 80% power](C:/Users/Yochai Shavit/Documents/GitHub/gong2017/Pilot_A/age_grp_main_pwr_80.png), [Age group main effect- 90% power](C:/Users/Yochai Shavit/Documents/GitHub/gong2017/Pilot_A/age_grp_main_pwr_90.png), and [Age group main effect- 95% power](C:/Users/Yochai Shavit/Documents/GitHub/gong2017/Pilot_A/age_grp_main_pwr_95.png)). 
+Power analysis using G*Power version 3.1.2.9 suggested that in order to obtain 80%, 90% and 95% power for the main effect of age, the required sample sizes are 154, 204, and 252 respectively (details can be found here: 
 
-In order to obtain 80%, 90%, and 95% power to observe the stronger effect of age group on generosity in time donations to relatives (Older>Younger), requires sample sizes of 90 (45 per group), 124 (62 per group), and 156 (78 per group) respectively (details can be found here: [age group time donations, relatives- 80% power](C:/Users/Yochai Shavit/Documents/GitHub/gong2017/Pilot_A/t_test_pwr_80.png), [age group time donations, relatives- 90% power](C:/Users/Yochai Shavit/Documents/GitHub/gong2017/Pilot_A/t_test_pwr_90.png), and [age group time donations, relatives- 95% power](C:/Users/Yochai Shavit/Documents/GitHub/gong2017/Pilot_A/t_test_pwr_95.png)).
+**Age group main effect- 80% power**
+![](age_grp_main_pwr_80.png), 
+
+**Age group main effect- 90% power**
+![](age_grp_main_pwr_90.png)
+
+**Age group main effect- 95% power**
+![](age_grp_main_pwr_95.png) 
+
+In order to obtain 80%, 90%, and 95% power to observe the stronger effect of age group on generosity in time donations to relatives (Older>Younger), requires sample sizes of 90 (45 per group), 124 (62 per group), and 156 (78 per group) respectively. Details can be found here:
+
+**age group time donations, relatives- 80% power**
+![](t_test_pwr_80.png)
+
+**age group time donations, relatives- 90%** 
+![](t_test_pwr_90.png)
+
+**age group time donations, relatives- 95%** 
+![](t_test_pwr_95.png)
 
 **Feasability-** Since the task requires about 10 minutes to complete online, and since the required samples are somewhat large, the replication study will be powered to observe the stronger effect of age group on generosity in time donations to relatives at 80% power.
 
@@ -123,9 +141,7 @@ In addition, after fitting the curves to the group median values, it turned out 
 
 Data preparation following the analysis plan.
 	
-```{r include=F}
-###Data Preparation
-
+```{r include=TRUE, results='hide', error=FALSE, warning=FALSE, message=FALSE}
 ####Load Relevant Libraries and Functions
 library(knitr)
 library(tidyverse)
@@ -151,8 +167,11 @@ data_vs_discount <- function(V, k, N, amount) {
   
   return(RMSE)
 }
+```
 
 ####Import data
+```{r include=TRUE, results='hide', error=FALSE, warning=FALSE, message=FALSE}
+
 #load 'raw' data sets
 df_old=read.csv("Pilot_A_older_raw.csv")
 df_young=read.csv("Pilot_A_young_raw.csv")
@@ -175,12 +194,16 @@ df_young=df_young%>%select(-one_of(vars_remove))
 
 #merge the two data sets
 df_og=full_join(df_old,df_young)
+```
 
 #### Data exclusion / filtering
+```{r results='hide', error=FALSE, warning=FALSE}
 #Retain only participants who responded "yes" to bonus_interested, and passed attention check
 df_og=df_og%>%filter(Bonus_eligible_interested=="Yes", attn_chk_20==20)
+```
 
-#### Prepare data for analysis - create columns etc.
+#### Prepare data for analysis
+```{r include=TRUE, results='hide', error=FALSE, warning=FALSE}
 #retain only vars used in analysis
 vars_remove=c('Bonus_eligible_interested', 'attn_chk_20')
 df_og=df_og%>%select(-one_of(vars_remove))
@@ -228,7 +251,7 @@ og_lng=df_og%>%
 ### Confirmatory analysis
 
 #### Demographic data
-```{r echo=FALSE}
+```{r echo=TRUE, results='hide', error=FALSE, warning=FALSE}
 #table of descpritive statistics
 dscrpt=df_og%>%group_by(age_grp)%>%summarise(male_female_ratio=paste(sum(gender=="Male"), "/", sum(gender=="Female")),
 Age_av=round(mean(age),2),Age_sd=round(sd(age),2), 
@@ -239,7 +262,7 @@ dscrpt2=dscrpt%>%rename('Age group'=age_grp, 'Male/Female ratio'=male_female_rat
 
 ```
 
-```{r test for differences, include=FALSE}
+```{r test for differences, include=TRUE, results='hide', error=FALSE, warning=FALSE}
 #Gender (chi-square)
 gen=chisq.test(df_og$gender, df_og$age_grp, rescale.p = T, correct = F)
 #Age
@@ -263,14 +286,17 @@ pander(frnd, digits=2, caption = "age group difference in average number of frie
 ```
 
 
-In table 1, we compare the two age groups' demographic variables. In the original paper, older adult participants were significanlty older, less educated, and had significanlty more important relatives. There were no significant differences in income nor number of important friends (see the original table [here](C:/Users/Yochai Shavit/Documents/GitHub/gong2017/Pilot_A/gong_et_al_demog.png)).
+In table 1, we compare the two age groups' demographic variables. In the original paper, older adult participants were significanlty older, less educated, and had significanlty more important relatives. There were no significant differences in income nor number of important friends (see figure 1. for original table).
 
 In this small pilot,the older adult group was significantly older ($t_{(3.8)}$=`r round(age$statistic,2)`, *p*=`r round(age$p.value, 3)`) and less educated ($t_{(4)}$=`r round(edu_lv$statistic,2)`, *p*=`r round(edu_lv$p.value, 3)`). We did not find additional significant differences between the groups.
+
+**Figure 1: Gong et al., 2017 descpriptive statistics by age group**
+![](gong_et_al_demog.png)
 
 `r kable(dscrpt2,align='c', caption = "Table 1: decsriptive statistics by age group")`
 
 #### Fitting the curve for age group median values (for each donation X kinship condition)
-```{r median values, include=FALSE}
+```{r median values, include=TRUE, results='hide', error=FALSE, warning=FALSE}
 #create df with monetary amounts divided by 1000 for plotting and analyses (to have the same units for time and money donations)
 df_og2=df_og%>%mutate(rel_1_mon=rel_1_mon/1000, rel_2_mon=rel_2_mon/1000, rel_5_mon=rel_5_mon/1000, rel_10_mon=rel_10_mon/1000, rel_20_mon=rel_20_mon/1000, rel_50_mon=rel_50_mon/1000, rel_100_mon=rel_100_mon/1000, nonrel_1_mon=nonrel_1_mon/1000, nonrel_2_mon=nonrel_2_mon/1000, nonrel_5_mon=nonrel_5_mon/1000, nonrel_10_mon=nonrel_10_mon/1000, nonrel_20_mon=nonrel_20_mon/1000, nonrel_50_mon=nonrel_50_mon/1000, nonrel_100_mon=nonrel_100_mon/1000)
 
@@ -315,7 +341,7 @@ med_plots=ggplot(data=med_table2, aes(x=soc_dist, y=med_amnt, color=age_grp))+
 ```
 
 
-```{r curve fitting-median values, include=FALSE}
+```{r curve fitting-median values, include=TRUE, results='hide', error=FALSE, warning=FALSE}
 #define dataset
 d=med_table2
 
@@ -423,24 +449,28 @@ med_plot1=ggplot(data=med_table_plot, aes(x=soc_dist, y=med_amnt, color=`Age-Kin
 ```
 
 
-As a necessary first step, I first extracted the median donation values for each age group in each of the four donation X kinship conditions. Plotting the data, it appears that compared to the median donation values in the origianl study, values in this small pilot sample were fairly similar, yet far less variable (see figure 1).
+As a necessary first step, I first extracted the median donation values for each age group in each of the four donation X kinship conditions. Plotting the data, it appears that compared to the median donation values in the origianl study, values in this small pilot sample were fairly similar, yet far less variable (see figure 2.b).
 
-**Median donation values and hypoerboloc curve- Gong et al., 2017**
-![](C:/Users/Yochai Shavit/Documents/GitHub/gong2017/Pilot_A/gong_et_al_med_amnts.png)                              
+**Figure 2a- Median donation values and hyperbolic curve- Gong et al., 2017**
+![](gong_et_al_med_amnts.png)                              
 
-**Figure 1- Median donation values, Pilot A**
+**Figure 2b- Median donation values, Pilot A**
 ```{r, echo=FALSE, warning=FALSE}
 med_plot1
 ```
 
-I proceded to fit the hyperbolic discount function to the group median donation values, with the aim of achiving similar goodness-of-fit indices to those obtained by Gong et al. As shown in table 2, the fit (assessed by $R^2$ and *RMSE*) was as good as in the original paper (see the values in the original paper [here](C:/Users/Yochai Shavit/Documents/GitHub/gong2017/Pilot_A/gong_et_al_vk.png)). The values of $V$ and $\kappa$ are somewhat arbitrary and are not meaningful in-and-of-themselves in this pilot analysis. 
+I proceded to fit the hyperbolic discount function to the group median donation values, with the aim of achiving similar goodness-of-fit indices to those obtained by Gong et al. As shown in table 2, the fit (assessed by $R^2$ and *RMSE*) was as good as in the original paper (see figure 3.) the values in the original paper.  
+
+**Figure 3: Gong et al., 2017- V, $\kappa$ and Fit measures for group median values, by condition**
+![](gong_et_al_vk.png)
+
 
 `r kable(med_smry, digits = 2, align = "c", caption = "Table 2: Parameters and Goodness-of-fit Indices of the Hyperbolic Functions, group median values")`
 
 #### Main Analysis: AUC values
 Since the hypoerbolic discount function fit the data well, I proceeded with the main analysis of interest: Comparing the two age groups' *AUC* values in each of the four conditions, with the aim of testing for a *qualified* main effect of age group indicating that younger adults are more generous than older adults, and a post hoc test for the difference between older and younger adults' generosity in donating time to relatives suggesting that older adults are more generous in this condition. 
 
-```{r create dataframe for analysis, include=FALSE}
+```{r create dataframe for analysis, include=TRUE, results='hide', error=FALSE, warning=FALSE, message=FALSE}
 #Create the empty dataframe, in which each participant have 4 rows
 df2=as.data.frame(cbind(
   subid=rep(unique(og_lng2$subid),4),
@@ -469,7 +499,7 @@ for (i in unique(df2$subid)){
 }
 ```
 
-```{r get individual k and AUC values, include=FALSE}
+```{r get individual k and AUC values, include=TRUE, results='hide', error=FALSE, warning=FALSE, message=FALSE}
 #for each age individual, exctract values for donation * kinship conditions
 
 #set varaible soc_dist in og_lng2 to be numeric
@@ -502,7 +532,7 @@ for(i in unique(df2$subid)){
   opt1=optim(c(1000, .2), optim_discount_wrapper) #-> run discount_wrapper
   df2_mr[df2_mr$subid==i, 'k']=opt1$par[2] #-> store resulting k_value
 
-  # Get AUC value - using Erin WolframAlpha, the integral of this discount function is:
+  # Get AUC value - using WolframAlpha, the integral of this discount function is:
 # V/k*ln(abs(1+k*n))+c -> we don't really care about c for AUC.
   k=opt1$par[2]
   V=opt1$par[1]
@@ -590,7 +620,7 @@ for(i in unique(df2$subid)){
 df2=full_join(df2_mr, df2_mnr)%>%full_join(df2_tr)%>%full_join(df2_tnr)
 ```
 
-```{r remove outliers, include=FALSE}
+```{r remove outliers, include=TRUE, results='hide', error=FALSE, warning=FALSE}
 #Negative AUC values (indicating a problem with the fitting process)
 df2=df2%>%filter(AUC>0)
 
@@ -608,7 +638,7 @@ df2=df2%>%filter(k<=(mean(k)+3*sd(k)) & k>=(mean(k)-3*sd(k)) & AUC<=(mean(AUC)+3
 min(df2$k)<k_low; max(df2$k)>k_high; min(df2$AUC)<AUC_low; max(df2$AUC)>AUC_high
 ```
 
-```{r AUC ANOVA, results="hide", error=FALSE}
+```{r AUC ANOVA, results="hide", error=FALSE, message=FALSE}
 #check if AUC is normally distributed
 ggplot(data=df2, aes(x=AUC))+geom_histogram() #-> it looks bimodal
 ggplot(data = df2, aes(x=log(AUC)))+geom_histogram() #-> still very bimodal...
@@ -639,7 +669,7 @@ is.numeric(df2$logAUC)#-> True
 #print(anova_AUC) #-> this run only when all the cells are full (i.e without removing outliers. I'm not sure what to do in case there will be ouliers, as there are in this pilot...)
 ```
 
-```{r remove participants, results="hide", include=FALSE}
+```{r remove participants, include=TRUE, results='hide', error=FALSE, warning=FALSE}
 ##One option- remove all observations of subjects with outliers
 
 #mon_counts=df2%>%filter(donation=="mon")%>%group_by(subid)%>%summarise(AUC_obs=length(AUC), k_obs=length(k))%>%ungroup()
@@ -688,7 +718,7 @@ is.numeric(df2$logAUC)#-> True
 #print(anova_AUC2) #->this hacky thing works...But mentions that this might be a problem for type 3 sum of squares.
 ```
 
-```{r post hoc test of interest, include=FALSE}
+```{r post hoc test of interest, include=TRUE, results='hide', error=FALSE, warning=FALSE}
 #get the appropriate dataset
 
 #df2_tr_crt=df2_time_crt%>%filter(donation=="time", kinship=="rel")
@@ -731,11 +761,70 @@ is.numeric(df2$logAUC)#-> True
 
 ```
 
+##### k values, secondary analysis
+```{r k ANOVA, results='hide', error=FALSE, warning=FALSE}
+#chack if AUC is normally distributed
+#ggplot(data=df2, aes(x=k))+geom_histogram() #-> positive skew
+#ggplot(data = df2, aes(x=log(k)))+geom_histogram() #-> much better
+
+#Since Gong et al., used log(k) for their analysis, I shall do the same
+#df2$log_k=log(df2$k)
+
+
+# check that k and log_k are numeric
+#is.numeric(df2$k);is.numeric(df2$log_k)#-> True, True
+
+# Run mixed ANOVA (without specifying that age_grp is observed)
+#anova_k=ezANOVA(data = df2, wid=.(subid), dv=.(log_k), within  = .(donation, kinship), between = .(age_grp), type = 3) #-> type=3 to emulate SPSS, indicate that age_grp is observed (rather than manipulated) to get more accurate eta_sq
+
+#print(anova_k) #-> this run only when all the cells are full (i.e without removing outliers. I'm not sure what to do in case there will be ouliers, as there are ni this simulated data...)
+```
+
+```{r k values ANOVA, results='hide', error=FALSE, warning=FALSE}
+#anova_k=ezANOVA(data = df2_time_crt, wid=.(subid), dv=.(log_k), within  = .(donation, kinship), between = .(age_grp),observed = .(age_grp), type = 3) #-> type=3 to emulate SPSS, indicate that age_grp is observed (rather than manipulated) to get more accurate eta_sq
+
+#print(anova_k) #-> comment main results (Gong et al. found sig. age_grp*donation interaction (as well as kinship*donation which is not of interest)
+```
+
+```{r k values post-hoc t-tests, results='hide', error=FALSE, warning=FALSE}
+#Gong et al found that there was no difference in discounting for time donations regardless of kinship, but that older adults discounted money donation more so than yound adults, in both donation conditions
+
+#get the appropriate datasets-
+#df2_mr_crt=df2_time_crt%>%filter(donation=="mon", kinship=="rel")
+#df2_mnr_crt=df2_time_crt%>%filter(donation=="mon", kinship=="nonrel")
+#df2_tr_crt=df2_time_crt%>%filter(donation=="time", kinship=="rel")
+#df2_tnr_crt=df2_time_crt%>%filter(donation=="time", kinship=="nonrel")
+
+#Post-hoc comparison of interest, using Bonferroni.
+#n_comparisons=2*2 #-> (there are 4 possible comparisons: old-young in both donations and both kinships)
+
+##run t.tests
+#money, relatives
+#t.2a=t.test(df2_mr_crt$log_k~df2_mr_crt$age_grp)
+#print(t.2a)
+#pt.2a=t.2a$p.value*n_comparisons
+
+#money, nonrelatives
+#t.2b=t.test(df2_mnr_crt$log_k~df2_mnr_crt$age_grp)
+#print(t.2b)
+#pt.2b=t.2b$p.value*n_comparisons
+
+#time, relatives
+#t.2c=t.test(df2_tr_crt$log_k~df2_tr_crt$age_grp)
+#print(t.2c)
+#pt.2c=t.2c$p.value*n_comparisons
+
+#time, nonrelatives
+#t.2d=t.test(df2_tnr_crt$log_k~df2_tnr_crt$age_grp)
+#print(t.2d)
+#pt.2d=t.2d$p.value*n_comparisons
+```
+
 
 **NOTE TO INSTRUCTORS REGARDING PILOT A ANALYSES AND RESULTS**
 ---------------------------------------------------------------
 
-The analyses of this study rely on having sufficient sample sizes. For example, the ANOVA won't run after removing cells from participants who's data could be fitted using the hyperbolic discount function and removing outliers as detailed in the original paper. I have outlined the code for the primary analyses of interest, and made sure it works on a large simulated dataset (Please check the "practice_analysis" repo in my "gong2017" folder on the class github account). I believe that these issues will be resolved once the full set of data is collected. In the mean time, and as assurance that this code can work, please see below the visuzlization for the AUC by condition post hoc test. 
+The analyses of this study rely on having sufficient sample sizes. For example, the ANOVA won't run after removing cells from participants who's data could be fitted using the hyperbolic discount function and removing outliers as detailed in the original paper. I have outlined the code for the primary analyses of interest, and made sure it works on a large simulated dataset (Please check the "practice_analysis" repo in my "gong2017" folder on the class github account). I believe that these issues will be resolved once the full set of data is collected. In the mean time, and as assurance that this code can work, please see below the visuzlization for the AUC by condition post hoc test. I had to comment out the code for these analyses because the file wouldn't knit with these lines included. 
 
 I deeply appreciate your patience...
 
