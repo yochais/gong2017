@@ -22,6 +22,9 @@ library(lavaan)
 library(car)
 library(broom)
 library(ez)
+library(lme4)
+library(lmerTest)
+library(pander)
 ```
 
 #create data 
@@ -214,7 +217,7 @@ og_lng=df_og%>%
 Now that the dataset is tidy, proceed to attemp and fit the hyperbolic discount curve to the median value in each group (age_group-kinship-donation form)
 ```{r median values}
 med_table=og_lng%>%group_by(age_grp,kinship,donation,soc_dist)%>%summarise(med_amnt=median(amount))
-write_csv(med_table,"med_table_shavit.csv")
+#write_csv(med_table,"med_table_shavit.csv")
 
 ggplot(data=med_table, aes(x=soc_dist, y=med_amnt, color=age_grp))+
   geom_point()+
@@ -714,6 +717,48 @@ AUC_plots=ggplot(data = df2_time_crt, aes(x=age_grp, y=log(AUC),color=age_grp))+
 ggsave("AUC_plots_simulated_data.png")
 AUC_plots
 
+```
+
+## better analysis: mixed linear model with random subject intercepts and planned contrast
+```{r lmer}
+#First set contrasts so that the intercept is the AUC value for older adults collapsing across donation and kinship conditions (to reflect the original "main" effect of age group)
+## age group
+contrasts(df2$age_grp)
+contrasts(df2$age_grp)=cbind('"Main"'=c(-1,1))#-> expecting older adults to be less generous overall, as was found in Gong et al.
+## donation
+contrasts(df2$donation)
+contrasts(df2$donation)=cbind('"Main"'=c(1,-1)) #-> expecting participants to be more generous with money over time
+## kinship
+contrasts(df2$kinship)
+contrasts(df2$kinship)=cbind('"Main"'=c(-1,1)) #-> expecting participants to be more generous to relatives over non-relatives
+
+#Run lmer
+lmer1=lmer(data=df2, log(AUC)~age_grp*donation*kinship+(1|subid), REML = F) #-> fitting with ML because we are interested in getting accurate estimates fir the parameters.
+
+#Run lmer with covariates
+lmer2=lmer(data=df2, log(AUC)~age_grp*donation*kinship+gender+incm_lv+edu_lv+num_friends+num_relatives+(1|subid), REML = F)
+
+#Second-Set contrasts d=so that the interceot is the mean AUC for older adults, when donating time to relatives.
+#In this case, the simple effect of age is the t-test of interest: the difference between older and younger adults when donating time to relatives.
+
+## age group
+contrasts(df2$age_grp)
+contrasts(df2$age_grp)=cbind('"Young"'=c(0,1))
+## donation
+contrasts(df2$donation)
+contrasts(df2$donation)=cbind('"Money"'=c(1,0))
+## kinship
+contrasts(df2$kinship) #current intercept: old/mon/nonrel
+contrasts(df2$kinship)=cbind('"Non_relatives"'=c(1,0))
+
+#Run lmer
+lmer3=lmer(data=df2, log(AUC)~age_grp*donation*kinship+(1|subid), REML = F) #-> fitting with ML because we are interested in getting accurate estimates fir the parameters.
+
+#Run lmer with covariates
+lmer4=lmer(data=df2, log(AUC)~age_grp*donation*kinship+gender+incm_lv+edu_lv+num_friends+num_relatives+(1|subid), REML = F)
+
+kable(tidy(lmer1))
+kable(tidy(lmer3))
 ```
 
 

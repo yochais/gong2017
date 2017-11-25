@@ -107,6 +107,9 @@ The individual *AUC* and $\kappa$ values are then entered to a dataset comprisin
 "Main" effect of age will be taken as the affect of Age when controlling for all other main independent variables and their interactions (type III sum of squares, as is typically used in Statistical programs). The authors did not specify the type of post-hoc test used to examine group differences in each condition. Since there are relatively few (4) pairwise comparisons in this test, and out of desire to be cautious, I will use the Bonferroni correction to deterimine the statistical significance of this test.
 Though not of main interest for this replication, I will also run the same ANOVA and post-hoc procedures on individual $\kappa$ values.
 
+**Additional analysis for this data-** Since this is a repeated measures dataset, a statistical procedure that is more robust to imbalances in the dataset is a mixed-effects linear model. I plan to run such a model setting a random intercept (different means) for individuals' AUC values and using planned orthogonal contrasts to test the specific group means difference of interest. Using planned contrasts, I first set the intercept to reflect the overall mean *AUC* value across age groups, donation and kinship conditions. In this case, the effect of age group reflects the "main" effect of age group. The contrast coding for the "age group" reflects the expectation that across donation and kinship conditions, the expectation is that younger adults are more generous.
+
+Then, providing that the is a significant 3-way interaction as was founf in the original paper, I will set the intercept to reflect the *AUC* value for older adults when donating time to relatives. In this case, the "simple" effect of age group reflects the difference between older and younger adults when donating time to relatives. Any interactions between age group and condition indicate that that difference (or lack there of) may be significanlty reduced, non-present, or even flipped in depending on the particular donation X kinship combination.  
 
 ###Differences from Original Study
 
@@ -820,6 +823,52 @@ is.numeric(df2$logAUC)#-> True
 #pt.2d=t.2d$p.value*n_comparisons
 ```
 
+#####Better analysis to test hypothesis- mexed effects linear model with planned orthogonal contrasts
+```{r lmer, warning=FALSE, message=FALSE, error=FALSE, results='hide'}
+#First set contrasts so that the intercept is the AUC value for older adults collapsing across donation and kinship conditions (to reflect the original "main" effect of age group)
+## age group
+contrasts(df2$age_grp)
+contrasts(df2$age_grp)=cbind('"Main"'=c(-1,1))#-> expecting older adults to be less generous overall, as was found in Gong et al.
+## donation
+contrasts(df2$donation)
+contrasts(df2$donation)=cbind('"Main"'=c(1,-1)) #-> expecting participants to be more generous with money over time
+## kinship
+contrasts(df2$kinship)
+contrasts(df2$kinship)=cbind('"Main"'=c(-1,1)) #-> expecting participants to be more generous to relatives over non-relatives
+
+#Run lmer
+lmer1=lmer(data=df2, logAUC~age_grp*donation*kinship+(1|subid), REML = F) #-> fitting with ML because we are interested in getting accurate estimates fir the parameters.
+
+#Run lmer with covariates
+lmer2=lmer(data=df2, logAUC~age_grp*donation*kinship+gender+incm_lv+edu_lv+num_friends+num_relatives+(1|subid), REML = F)
+
+#Second-Set contrasts d=so that the interceot is the mean AUC for older adults, when donating time to relatives.
+#In this case, the simple effect of age is the t-test of interest: the difference between older and younger adults when donating time to relatives.
+
+## age group
+contrasts(df2$age_grp)
+contrasts(df2$age_grp)=cbind('"Young"'=c(0,1))
+## donation
+contrasts(df2$donation)
+contrasts(df2$donation)=cbind('"Money"'=c(1,0))
+## kinship
+contrasts(df2$kinship) #current intercept: old/mon/nonrel
+contrasts(df2$kinship)=cbind('"Non_relatives"'=c(1,0))
+
+#Run lmer
+lmer3=lmer(data=df2, logAUC~age_grp*donation*kinship+(1|subid), REML = F) #-> fitting with ML because we are interested in getting accurate estimates fir the parameters.
+
+#Run lmer with covariates
+lmer4=lmer(data=df2, logAUC~age_grp*donation*kinship+gender+incm_lv+edu_lv+num_friends+num_relatives+(1|subid), REML = F)
+
+kable(tidy(lmer1))
+kable(tidy(lmer3))
+```
+
+`r kable(tidy(lmer1), caption="Table 3: Main effect of age group, using a linear mixed effects model")`
+
+
+`r kable(tidy(lmer3), caption="Table 4: Simple effect of age group when donating time to relatives, using a linear mixed effects model")`
 
 **NOTE TO INSTRUCTORS REGARDING PILOT A ANALYSES AND RESULTS**
 ---------------------------------------------------------------
