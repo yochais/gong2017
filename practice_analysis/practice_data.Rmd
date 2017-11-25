@@ -776,9 +776,9 @@ df2$log_k=log(df2$k)
 is.numeric(df2$k);is.numeric(df2$log_k)#-> True, True
 
 # Run mixed ANOVA (without specifying that age_grp is observed)
-anova_k=ezANOVA(data = df2, wid=.(subid), dv=.(log_k), within  = .(donation, kinship), between = .(age_grp), type = 3) #-> type=3 to emulate SPSS, indicate that age_grp is observed (rather than manipulated) to get more accurate eta_sq
+#anova_k=ezANOVA(data = df2, wid=.(subid), dv=.(log_k), within  = .(donation, kinship), between = .(age_grp), type = 3) #-> type=3 to emulate SPSS, indicate that age_grp is observed (rather than manipulated) to get more accurate eta_sq
 
-print(anova_k) #-> this run only when all the cells are full (i.e without removing outliers. I'm not sure what to do in case there will be ouliers, as there are ni this simulated data...)
+#print(anova_k) #-> this run only when all the cells are full (i.e without removing outliers. I'm not sure what to do in case there will be ouliers, as there are ni this simulated data...)
 ```
 
 ```{r k values check for problem participants}

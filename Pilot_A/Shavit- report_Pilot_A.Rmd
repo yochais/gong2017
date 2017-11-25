@@ -154,6 +154,8 @@ library(ez)
 library(broom)
 library(pander)
 library(kableExtra)
+library(lme4)
+library(lmerTest)
 
 # compute the hyperbolic function
 discount <- function (V, k, N) {
@@ -875,6 +877,9 @@ kable(tidy(lmer3))
 
 The analyses of this study rely on having sufficient sample sizes. For example, the ANOVA won't run after removing cells from participants who's data could be fitted using the hyperbolic discount function and removing outliers as detailed in the original paper. I have outlined the code for the primary analyses of interest, and made sure it works on a large simulated dataset (Please check the "practice_analysis" repo in my "gong2017" folder on the class github account). I believe that these issues will be resolved once the full set of data is collected. In the mean time, and as assurance that this code can work, please see below the visuzlization for the AUC by condition post hoc test. I had to comment out the code for these analyses because the file wouldn't knit with these lines included. 
 
+You may note that using this data to run a mixed effects linear model does indeed produce inteligible results.
+
 I deeply appreciate your patience...
 
+** for reference: Plots for the effects of age group in each of the 4 conditions ** 
 ![](AUC_plots_simulated_data.png)
