@@ -36,16 +36,16 @@ mturk-and-gmail.txt
 !README.md
 !/Gong_et_al_2017.pdf
 .Rproj.user
-age_grp_main_pwr_80.png
-age_grp_main_pwr_90.png
-age_grp_main_pwr_95.png
-t_test_pwr_80.png
-t_test_pwr_90.png
-t_test_pwr_95.png
-gong_et_al_demog.png
-gong_et_al_med_amnts.png
-gong_et_al_vk.png
-AUC_plots_simulated_data.png
+!age_grp_main_pwr_80.png
+!age_grp_main_pwr_90.png
+!age_grp_main_pwr_95.png
+!t_test_pwr_80.png
+!t_test_pwr_90.png
+!t_test_pwr_95.png
+!gong_et_al_demog.png
+!gong_et_al_med_amnts.png
+!gong_et_al_vk.png
+!AUC_plots_simulated_data.png
 
 # SPSS data files
 *.sav
