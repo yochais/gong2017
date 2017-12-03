@@ -1,0 +1,299 @@
+---
+title: "Pilot_B_verify_code"
+author: "Yochai Shavit"
+date: "December 3, 2017"
+output: html_document
+---
+
+The purpose of this code is simply to verify that the code runs on non-naive subjects (no unexpected errors that necessitates change of design)
+
+**links to working surveys**: 
+
+[Older adults](https://stanforduniversity.qualtrics.com/jfe/form/SV_6LnTaKZtZnVuDDn)
+
+[Younger adults](https://stanforduniversity.qualtrics.com/jfe/form/SV_3xaknrYxryF5NTD)
+
+#### Pilot B Sample
+  In Pilot B, 32 mTurk workers completed a screener survey. Of these, 8 participants (7 younger adults (age<35) and 1 older adults (age>60)) Completed the experimental task.
+  
+### Methods Addendum (Post Data Collection)
+To assure participant's privacy, indetifiable information (IP addresses and MTurk IDs) was manually removed from the raw data prior to analysis. This was done to allow the data to be shared publicly. 
+
+### Data preparation
+
+Data preparation following the analysis plan.
+	
+```{r include=TRUE, results='hide', error=FALSE, warning=FALSE, message=FALSE}
+####Load Relevant Libraries and Functions
+library(knitr)
+library(tidyverse)
+library(ggplot2)
+library(car)
+library(ez)
+library(broom)
+library(pander)
+library(kableExtra)
+library(lme4)
+library(lmerTest)
+
+# compute the hyperbolic function
+discount <- function (V, k, N) {
+  nu <- V / (1 + k * N)
+  
+  return(nu)
+}
+
+# compute RMSE for a given parameter set and data
+data_vs_discount <- function(V, k, N, amount) {
+  nu <- discount(V, k, N)
+  
+  RMSE <- sqrt(mean((amount - nu)^2))
+  
+  return(RMSE)
+}
+```
+
+####Import data
+```{r include=TRUE, results='hide', error=FALSE, warning=FALSE, message=FALSE}
+
+#load 'raw' data sets
+df_old=read.csv("older_PilotB_raw.csv")
+df_young=read.csv("younger_PilotB_raw.csv")
+
+#clean each data set
+## df_old
+colnames(df_old) <- as.character(unlist(df_old[1,]))
+df_old=df_old[-c(1,2),]
+
+#varaibles to remove
+vars_remove=c('consent_yesno','Start Date', 'End Date', 'Response Type', 'Progress', 'Duration (in seconds)', 'Finished', 'Recorded Date', 'Recipient Last Name', 'Recipient First Name', 'Recipient Email','External Data Reference', 'Location Latitude', 'Location Longitude', 'Distribution Channel', 'User Language', 'issues_not_eligible', 'issues_not_interested', 'gender - Other: - Text', 'race - Other: - Text', 'issues_participant')
+
+df_old=df_old%>%select(-one_of(vars_remove))
+
+##df_young
+colnames(df_young) <- as.character(unlist(df_young[1,]))
+df_young=df_young[-c(1,2),]
+
+df_young=df_young%>%select(-one_of(vars_remove))
+
+#merge the two data sets
+df_og=full_join(df_old,df_young)
+```
+
+#### Data exclusion / filtering
+```{r results='hide', error=FALSE, warning=FALSE}
+#Retain only participants who responded "yes" to bonus_interested, and passed attention check
+df_og=df_og%>%filter(Bonus_eligible_interested=="Yes", attn_chk_20==20)
+```
+
+#### Prepare data for analysis
+```{r include=TRUE, results='hide', error=FALSE, warning=FALSE}
+#retain only vars used in analysis
+vars_remove=c('Bonus_eligible_interested', 'attn_chk_20')
+df_og=df_og%>%select(-one_of(vars_remove))
+
+#Add age group variable
+df_og$age_grp=recode(df_og$age, "lo:35='young'; 60:hi='old'", as.factor.result = T)
+summary(df_og$age_grp) #-> 1 old, 7 young
+
+#Rename variables to be more readable
+df_og=df_og%>%rename(subid=`Response ID`, gender=`gender - Selected Choice`, race=`race - Selected Choice`)
+
+#Recode education to numeric
+df_og$edu_lv=recode(df_og$education_level, "'Primary school or lower'=1; 'Middle school'=2; 'High school'=3; 'Undergraduate (College or equivalent)'=4; 'Graduate school or higher'=5", as.numeric.result = T)
+
+#Recode subid into numbers (but still factor)
+df_og$subid=as.factor(df_og$subid)
+df_og$subid=as.numeric(df_og$subid)
+df_og$subid=as.factor(df_og$subid)
+str(df_og$subid)
+
+#Make sure all variables that should be numeric are numeric
+is.numeric(df_og$age); is.numeric(df_og$income); is.numeric(df_og$imp_relative_num); is.numeric(df_og$imp_friends_num); is.numeric(df_og$rel_1_mon); is.numeric(df_og$rel_1_time); is.numeric(df_og$nonrel_1_mon); is.numeric(df_og$nonrel_1_time)#-> All FALSE
+
+#Recode all variables that should be numeric into numeric
+df_og[,c(3,5:35)]=as.numeric(unlist(df_og[,c(3,5:35)])) #-> columns 3, 5:35 (all numeric vars)
+
+#check
+is.numeric(df_og$age); is.numeric(df_og$income); is.numeric(df_og$imp_relative_num); is.numeric(df_og$imp_friends_num); is.numeric(df_og$rel_1_mon); is.numeric(df_og$rel_1_time); is.numeric(df_og$nonrel_1_mon); is.numeric(df_og$nonrel_1_time)#-> all true!
+
+#long-form dataset
+og_lng=df_og%>%
+  gather(condition, amount,
+         rel_1_mon,rel_2_mon,rel_5_mon,rel_10_mon,rel_20_mon, rel_50_mon, rel_100_mon,
+         rel_1_time,rel_2_time,rel_5_time,rel_10_time,rel_20_time, rel_50_time, rel_100_time,
+         nonrel_1_mon,nonrel_2_mon,nonrel_5_mon,nonrel_10_mon,nonrel_20_mon, nonrel_50_mon, nonrel_100_mon,
+         nonrel_1_time,nonrel_2_time,nonrel_5_time,nonrel_10_time,nonrel_20_time, nonrel_50_time, nonrel_100_time
+         )%>%
+  separate(condition, c("kin", "soc_dist", "donation"), "_")%>%
+  spread(kin, amount)%>%
+  gather(kinship, amount,
+         rel,nonrel) #-> That works!
+
+```
+
+#### Demographic data
+```{r echo=TRUE, results='hide', error=FALSE, warning=FALSE}
+#table of descpritive statistics
+dscrpt=df_og%>%group_by(age_grp)%>%summarise(male_female_ratio=paste(sum(gender=="Male"), "/", sum(gender=="Female")),
+Age_av=round(mean(age),2),Age_sd=round(sd(age),2), 
+Education_av=round(mean(edu_lv),2),Education_sd=round(sd(edu_lv),2), Household_income_av=round(mean(income),2),Household_income_sd=round(sd(income),2), sig_relatives_av=round(mean(imp_relative_num),2),sig_relatives_sd=round(sd(imp_relative_num),2), 
+sig_friends_av=round(mean(imp_friends_num),2), sig_friends_sd=round(sd(imp_friends_num),2))
+
+dscrpt2=dscrpt%>%rename('Age group'=age_grp, 'Male/Female ratio'=male_female_ratio)%>%unite('Age (m | sd)', c('Age_av', 'Age_sd'), sep=" | ")%>%unite('Education level (m | sd)', c('Education_av', 'Education_sd'), sep=" | ")%>%unite('Household income (m | sd)', c('Household_income_av', 'Household_income_sd'), sep=" | ")%>%unite('Important relatives (m | sd)', c('sig_relatives_av', 'sig_relatives_sd'), sep=" | ")%>%unite('Important friends (m | sd)', c('sig_friends_av', 'sig_friends_sd'), sep=" | ")
+
+```
+
+#### Fitting the curve for age group median values (for each donation X kinship condition)
+```{r median values, include=TRUE, results='hide', error=FALSE, warning=FALSE}
+#create df with monetary amounts divided by 1000 for plotting and analyses (to have the same units for time and money donations)
+df_og2=df_og%>%mutate(rel_1_mon=rel_1_mon/1000, rel_2_mon=rel_2_mon/1000, rel_5_mon=rel_5_mon/1000, rel_10_mon=rel_10_mon/1000, rel_20_mon=rel_20_mon/1000, rel_50_mon=rel_50_mon/1000, rel_100_mon=rel_100_mon/1000, nonrel_1_mon=nonrel_1_mon/1000, nonrel_2_mon=nonrel_2_mon/1000, nonrel_5_mon=nonrel_5_mon/1000, nonrel_10_mon=nonrel_10_mon/1000, nonrel_20_mon=nonrel_20_mon/1000, nonrel_50_mon=nonrel_50_mon/1000, nonrel_100_mon=nonrel_100_mon/1000)
+
+#long-form this dataframe
+og_lng2=df_og2%>%
+  gather(condition, amount,
+         rel_1_mon,rel_2_mon,rel_5_mon,rel_10_mon,rel_20_mon, rel_50_mon, rel_100_mon,
+         rel_1_time,rel_2_time,rel_5_time,rel_10_time,rel_20_time, rel_50_time, rel_100_time,
+         nonrel_1_mon,nonrel_2_mon,nonrel_5_mon,nonrel_10_mon,nonrel_20_mon, nonrel_50_mon, nonrel_100_mon,
+         nonrel_1_time,nonrel_2_time,nonrel_5_time,nonrel_10_time,nonrel_20_time, nonrel_50_time, nonrel_100_time
+         )%>%
+  separate(condition, c("kin", "soc_dist", "donation"), "_")%>%
+  spread(kin, amount)%>%
+  gather(kinship, amount,
+         rel,nonrel)
+
+#set varaible soc_dist in og_lng to be numeric in both dataframes
+#original df
+og_lng$soc_dist=as.character(og_lng$soc_dist)
+og_lng$soc_dist=as.numeric(og_lng$soc_dist)
+is.numeric(og_lng$soc_dist)
+
+#df for plotting and analysis (og_lng2)
+og_lng2$soc_dist=as.character(og_lng2$soc_dist)
+og_lng2$soc_dist=as.numeric(og_lng2$soc_dist)
+is.numeric(og_lng2$soc_dist)
+
+#create table with original median values
+med_table=og_lng%>%group_by(age_grp,kinship,donation,soc_dist)%>%summarise(med_amnt=median(amount))
+#create table of median values with the tranformed monetary amounts
+med_table2=og_lng2%>%group_by(age_grp,kinship,donation,soc_dist)%>%summarise(med_amnt=median(amount))
+
+#generate plot
+med_plots=ggplot(data=med_table2, aes(x=soc_dist, y=med_amnt, color=age_grp))+
+  geom_point(position = "jitter")+
+  geom_smooth(method = "lm", formula = y~poly(x,2), se=F)+
+  facet_wrap(donation~kinship)+
+  xlab("Social Distance")+
+  ylab("Median group amount, moneyX1000 or days")+
+  ggtitle("Donation amounts by social distance for older and younger adults")+
+  ggthemes::theme_few()
+```
+
+```{r curve fitting-median values, include=TRUE, results='hide', error=FALSE, warning=FALSE}
+#define dataset
+d=med_table2
+
+#create empty vectors to store values
+age_grp=vector(mode="character",length=0); donation=vector(mode="character",length=0); kinship=vector(mode="character",length=0); V_values=vector(mode="numeric",length=0); k_values=vector(mode="numeric",length=0); RMSE=vector(mode="numeric",length=0); R_sq=vector(mode="numeric",length=0)
+
+#run for each age group, exctract values for donation * kinship conditions
+
+for(i in unique(d$age_grp)){
+  
+  d_mon_rel=d%>%filter(age_grp==i, donation=="mon", kinship=="rel") #-> create temp df to get values from
+  age_grp=c(age_grp,i) #-> store the appropriate age group
+  donation=c(donation, "mon") #-> store the appropriate donation
+  kinship=c(kinship, "rel") #-> store the appropriate kinship
+  optim_discount_wrapper <- function(x) { #-> define discount wrapper to get V, k, and RMSE values for this                                                      condition
+  return(data_vs_discount(V = x[1], k = x[2],  
+                          N = d_mon_rel$soc_dist, 
+                          amount = d_mon_rel$med_amnt))
+}
+
+  opt1=optim(c(100, .2), optim_discount_wrapper) #-> run discount_wrapper
+  V_values=c(V_values,opt1$par[1]) #-> store resulting V_value
+  k_values=c(k_values, opt1$par[2]) #-> store resulting k_value
+  RMSE=c(RMSE, opt1$value) #-> store resulting RMSE value
+  d_mon_rel$pred=discount(V = opt1$par[1], k = opt1$par[2],N = d_mon_rel$soc_dist) #-> store predictions in temp                                                                                          dataset
+  cor1=cor.test(d_mon_rel$med_amnt, d_mon_rel$pred) #-> run cor.test to get correlation of predictions and data
+  R_sq=c(R_sq, (cor1$estimate)^2) #-> square the estimate (pearson's R) to get R^2.
+  
+  
+  d_mon_nonrel=d%>%filter(age_grp==i, donation=="mon", kinship=="nonrel") #-> do all of this for the next donation                                                                               * Kinship condition
+  age_grp=c(age_grp,i)
+  donation=c(donation, "mon")
+  kinship=c(kinship, "nonrel")
+  optim_discount_wrapper <- function(x) {
+  return(data_vs_discount(V = x[1], k = x[2],  
+                          N = d_mon_nonrel$soc_dist, 
+                          amount = d_mon_nonrel$med_amnt))
+}
+
+  opt2=optim(c(100, .2), optim_discount_wrapper)
+  V_values=c(V_values,opt2$par[1])
+  k_values=c(k_values, opt2$par[2])
+  RMSE=c(RMSE, opt2$value)
+  d_mon_nonrel$pred=discount(V = opt2$par[1], k = opt2$par[2],N = d_mon_nonrel$soc_dist)
+  cor2=cor.test(d_mon_nonrel$med_amnt, d_mon_nonrel$pred)
+  R_sq=c(R_sq, (cor2$estimate)^2)
+
+
+  d_time_rel=d%>%filter(age_grp==i, donation=="time", kinship=="rel")
+  age_grp=c(age_grp,i)
+  donation=c(donation, "time")
+  kinship=c(kinship, "rel")
+  optim_discount_wrapper <- function(x) {
+  return(data_vs_discount(V = x[1], k = x[2],  
+                          N = d_time_rel$soc_dist, 
+                          amount = d_time_rel$med_amnt))
+}
+
+  opt3=optim(c(100, .2), optim_discount_wrapper)
+  V_values=c(V_values,opt3$par[1])
+  k_values=c(k_values, opt3$par[2])
+  RMSE=c(RMSE, opt3$value)
+  d_time_rel$pred=discount(V = opt3$par[1], k = opt3$par[2],N = d_time_rel$soc_dist)
+  cor3=cor.test(d_time_rel$med_amnt, d_time_rel$pred)
+  R_sq=c(R_sq, (cor3$estimate)^2)
+
+  
+  d_time_nonrel=d%>%filter(age_grp==i, donation=="time", kinship=="nonrel")
+  age_grp=c(age_grp,i)
+  donation=c(donation, "time")
+  kinship=c(kinship, "nonrel")
+  optim_discount_wrapper <- function(x) {
+  return(data_vs_discount(V = x[1], k = x[2],  
+                          N = d_time_nonrel$soc_dist, 
+                          amount = d_time_nonrel$med_amnt))
+}
+
+  opt4=optim(c(100, .2), optim_discount_wrapper)
+  V_values=c(V_values,opt4$par[1])
+  k_values=c(k_values, opt4$par[2])
+  RMSE=c(RMSE, opt4$value)
+  d_time_nonrel$pred=discount(V = opt4$par[1], k = opt4$par[2],N = d_time_nonrel$soc_dist)
+  cor4=cor.test(d_time_nonrel$med_amnt, d_time_nonrel$pred)
+  R_sq=c(R_sq, (cor4$estimate)^2)
+
+}
+
+#Add all vectors to one dataset
+med_smry=as.data.frame(cbind(`Age group`=age_grp, Donation=donation, Kinship=kinship, V=V_values, k=k_values, `R sqr`=R_sq, RMSE), row.names = F)%>%mutate(V=as.character(V), k=as.character(k), `R sqr`=as.character(`R sqr`), RMSE=as.character(RMSE))%>%mutate(V=as.numeric(V), k=as.numeric(k), `R sqr`=as.numeric(`R sqr`), RMSE=as.numeric(RMSE))
+
+kable(med_smry, digits = 2, align = "c", caption = "Estimated Parameters and Goodness-of-fit Indices of the Hyperbolic Functions, group median values")
+
+#set data to create similar median amounts plots to the one appearing in the original paper.
+med_table_plot=med_table2%>%unite('Age-Kinship', c('age_grp', 'kinship'), sep=" - ")
+
+med_plot1=ggplot(data=med_table_plot, aes(x=soc_dist, y=med_amnt, color=`Age-Kinship`))+
+  geom_point(position = "dodge", aes(shape=`Age-Kinship`))+
+  #geom_smooth(method = "lm", formula = y~poly(x,1),se=F)+
+  ylim(0,100)+
+  facet_grid(donation~.)+
+  xlab("Social Distance")+
+  ylab("Median group amount, moneyX1000 or days")+
+  ggtitle("Donation amounts by social distance for older and younger adults")+
+  ggthemes::theme_few()
+
+print(med_plot1)
+```
