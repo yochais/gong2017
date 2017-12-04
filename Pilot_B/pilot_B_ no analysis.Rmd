@@ -24,23 +24,31 @@ The original effect sizes of interest were: $\eta_p^2$=0.05 for the qualified ma
 Power analysis using G*Power version 3.1.2.9 suggested that in order to obtain 80%, 90% and 95% power for the main effect of age, the required sample sizes are 154, 204, and 252 respectively. Details can be found here:
 
 **Age group main effect- 80% power**
-![](age_grp_main_pwr_80.png), 
+
+![](age_grp_main_pwr_80.png)
 
 **Age group main effect- 90% power**
+
 ![](age_grp_main_pwr_90.png)
 
 **Age group main effect- 95% power**
+
 ![](age_grp_main_pwr_95.png) 
 
 In order to obtain 80%, 90%, and 95% power to observe the stronger effect of age group on generosity in time donations to relatives (Older>Younger), requires sample sizes of 90 (45 per group), 124 (62 per group), and 156 (78 per group) respectively (A-priory power was calculated for a one-sided test since the direction of the effect is known and replication relies on this directionality). Details can be found here:
 
 **age group time donations, relatives- 80% power**
+
 ![](t_test_pwr_80.png)
 
+
 **age group time donations, relatives- 90%** 
+
 ![](t_test_pwr_90.png)
 
+
 **age group time donations, relatives- 95%** 
+
 ![](t_test_pwr_95.png)
 
 **Feasability-** Since the task requires about 10 minutes to complete online, and since the required samples are somewhat large, the replication study will be powered to observe the stronger effect of age group on generosity in time donations to relatives at 75% power- 40 participants in each age group.
@@ -50,13 +58,6 @@ In order to obtain 80%, 90%, and 95% power to observe the stronger effect of age
 The above mentioned power calculation suggests that a sample consisting of **39 older adults** (aged 60 or older), and **39 younger adults** (aged 35 or younger) will suffice to achieve 75% power (see below) to detect the effect of interest. We will rely on Amazon's mechanical Turk for data colelction, and sample only U.S residents to minimize the chance that participants do not read English.
 
 ![](Power_t_test_75.png)
-
-**links to working surveys**: 
-
-[Older adults](https://stanforduniversity.qualtrics.com/jfe/form/SV_6LnTaKZtZnVuDDn)
-
-[Younger adults](https://stanforduniversity.qualtrics.com/jfe/form/SV_3xaknrYxryF5NTD)
-
 
   
 ###Materials
@@ -83,9 +84,10 @@ Participants then proceeded to the hypothetical donation task reported above.
 
 **links to working surveys**: 
 
-[Older adults](https://stanforduniversity.qualtrics.com/jfe/form/SV_1G5Gp4eys77yAHr)
+[Older adults](https://stanforduniversity.qualtrics.com/jfe/form/SV_6LnTaKZtZnVuDDn)
 
-[Younger adults](https://stanforduniversity.qualtrics.com/jfe/form/SV_1QYqUm51SjqaQfP) 
+[Younger adults](https://stanforduniversity.qualtrics.com/jfe/form/SV_3xaknrYxryF5NTD)
+
 
 ###Analysis Plan
 As a result of the replication study being done online, the two datasets (one with data from older participants and another with younger participants' data) first have to be merged. After this merger, the analysis proceeds as follows:
@@ -416,6 +418,7 @@ med_plot1=ggplot(data=med_table_plot, aes(x=soc_dist, y=med_amnt, color=`Age-Kin
 As a necessary first step, I first extracted the median donation values for each age group in each of the four donation X kinship conditions. Plotting the data, it appears that compared to the median donation values in the origianl study, values in this small pilot sample were fairly similar, yet far less variable (see figure 2.b).
 
 **Figure 2a- Median donation values and hyperbolic curve- Gong et al., 2017**
+
 ![](gong_et_al_med_amnts.png)                              
 
 **Figure 2b- Median donation values, Pilot B**
@@ -426,6 +429,7 @@ med_plot1
 I proceded to fit the hyperbolic discount function to the group median donation values, with the aim of achiving similar goodness-of-fit indices to those obtained by Gong et al. As shown in table 2, the fit (assessed by $R^2$ and *RMSE*) was as good as in the original paper (see figure 3.) the values in the original paper.  
 
 **Figure 3: Gong et al., 2017- V, $\kappa$ and Fit measures for group median values, by condition**
+
 ![](gong_et_al_vk.png)
 
 
