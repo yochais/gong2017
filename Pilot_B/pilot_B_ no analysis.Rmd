@@ -1,13 +1,8 @@
 ---
-title: "Replication of Study 1 by Gong, Zhang & Fung (2017, Journals of Gerontology: Series B)"
-author: "Yochai Z. Shavit (yochais@stanford.edu)"
-date: "`r format(Sys.time(), '%B %d, %Y')`"
-output:
-  html_document:
-    toc: yes
-    toc_depth: 3
-    toc_float:
-      collapsed: false
+title: "Pilot_B_verify_code"
+author: "Yochai Shavit"
+date: "December 3, 2017"
+output: html_document
 ---
 
 ##Introduction
@@ -26,34 +21,45 @@ output:
 
 The original effect sizes of interest were: $\eta_p^2$=0.05 for the qualified main age group effect effect, and *D*=`r round(((2*3.22)/sqrt(145)),2)` for the post-hoc t-test on generosity of time donations for relatives. 
 
-Power analysis using G*Power version 3.1.2.9 suggested that in order to obtain 80%, 90% and 95% power for the main effect of age, the required sample sizes are 154, 204, and 252 respectively (details can be found here: 
+Power analysis using G*Power version 3.1.2.9 suggested that in order to obtain 80%, 90% and 95% power for the main effect of age, the required sample sizes are 154, 204, and 252 respectively. Details can be found here:
 
 **Age group main effect- 80% power**
-![](age_grp_main_pwr_80.png), 
+
+![](age_grp_main_pwr_80.png)
 
 **Age group main effect- 90% power**
+
 ![](age_grp_main_pwr_90.png)
 
 **Age group main effect- 95% power**
+
 ![](age_grp_main_pwr_95.png) 
 
-In order to obtain 80%, 90%, and 95% power to observe the stronger effect of age group on generosity in time donations to relatives (Older>Younger), requires sample sizes of 90 (45 per group), 124 (62 per group), and 156 (78 per group) respectively. Details can be found here:
+In order to obtain 80%, 90%, and 95% power to observe the stronger effect of age group on generosity in time donations to relatives (Older>Younger), requires sample sizes of 90 (45 per group), 124 (62 per group), and 156 (78 per group) respectively (A-priory power was calculated for a one-sided test since the direction of the effect is known and replication relies on this directionality). Details can be found here:
 
 **age group time donations, relatives- 80% power**
+
 ![](t_test_pwr_80.png)
 
+
 **age group time donations, relatives- 90%** 
+
 ![](t_test_pwr_90.png)
 
+
 **age group time donations, relatives- 95%** 
+
 ![](t_test_pwr_95.png)
 
-**Feasability-** Since the task requires about 10 minutes to complete online, and since the required samples are somewhat large, the replication study will be powered to observe the stronger effect of age group on generosity in time donations to relatives at 80% power.
+**Feasability-** Since the task requires about 10 minutes to complete online, and since the required samples are somewhat large, the replication study will be powered to observe the stronger effect of age group on generosity in time donations to relatives at 75% power- 40 participants in each age group.
 
 ###Planned Sample
 
-The above mentioned power calculation suggests that a sample consisting of **45 older adults** (aged 60 or older), and **45 younger adults** (aged 35 or younger) will suffice to achieve 80% to detect the effect of interest. We will rely on Amazon's mechanical Turk for data colelction, and sample only U.S residents to minimize the chance that participants do not read English.
+The above mentioned power calculation suggests that a sample consisting of **39 older adults** (aged 60 or older), and **39 younger adults** (aged 35 or younger) will suffice to achieve 75% power (see below) to detect the effect of interest. We will rely on Amazon's mechanical Turk for data colelction, and sample only U.S residents to minimize the chance that participants do not read English.
 
+![](Power_t_test_75.png)
+
+  
 ###Materials
 
 In this study, age group is treated as a between subjects independent variable. Participants in both age groups completed the same experimental task. At first, the were given the following instruction:
@@ -78,9 +84,10 @@ Participants then proceeded to the hypothetical donation task reported above.
 
 **links to working surveys**: 
 
-[Older adults](https://stanforduniversity.qualtrics.com/jfe/form/SV_1G5Gp4eys77yAHr)
+[Older adults](https://stanforduniversity.qualtrics.com/jfe/form/SV_6LnTaKZtZnVuDDn)
 
-[Younger adults](https://stanforduniversity.qualtrics.com/jfe/form/SV_1QYqUm51SjqaQfP) 
+[Younger adults](https://stanforduniversity.qualtrics.com/jfe/form/SV_3xaknrYxryF5NTD)
+
 
 ###Analysis Plan
 As a result of the replication study being done online, the two datasets (one with data from older participants and another with younger participants' data) first have to be merged. After this merger, the analysis proceeds as follows:
@@ -120,26 +127,15 @@ Second, as noted above, the amount of money participants are instructed to imagi
 
 Third, the original study was conducted in lab and included a cognitive assesment procedure. The replication is taking place on Amazon's mechanical Turk and does not include cognitive assessment. The decision to drop this assesment was made since the original paper did not find a relationship between performance and cognitive ability, and the first author of the original paper stated in a personal communication that he does not think that this procedure would alter participants' mindsets. 
 
-Fourth, since data for this study is collected on Amazon's Mechanical Turk, I incleded an additional attention check- after indicating the amount of time and money they are willing to donate to a relative at position 20, participants are asked: "In the last question, your answers referred to the participant in position:" with choice options of 3, 7, 12, 16, 20, 28, and 42. Participants who fail to correctly state "20" are excluded from analysis. 
+Fourth, since data for this study is collected on Amazon's Mechanical Turk, I incleded an additional attention check- after indicating the amount of time and money they are willing to donate to a relative at position 20, participants are asked: "In the last question, your answers referred to the participant in position:" with choice options of 3, 7, 12, 16, 20, 28, and 42. Participants who fail to correctly state "20" are excluded from analysis.
 
-
-```{r include=FALSE}
+Fifth, the original authors fitted the hyperbolic discount function to the data using Matlabv(version 2015a). I am fitting the data using the "optim" function from the 'stats' package for R. Testing this procedure on simulated data yielded similar results to those obtained by Gong et al (2017).
+  
 ### Methods Addendum (Post Data Collection)
-#You can comment this section out prior to final report with data collection.
-```
+To assure participant's privacy, indetifiable information (IP addresses and MTurk IDs) was manually removed from the raw data prior to analysis. This was done to allow the data to be shared publicly. 
 
-
-#### Actual Sample
-  In Pilot A, reported here, responses of `r 6+14` potential participants were recorded. In order to pilot the data cleaning procedures, some of the participants purposefully provided answers that rendered them ineligible. The final sample consisted of 3 non-naive older participants and 3 non-naive younger participants.
-
-#### Differences from pre-data collection methods plan
-Since this pilot was not done through Amazon Mechanical Turk, possible issues with interacting with that platform for not tested.
-
-In addition, after fitting the curves to the group median values, it turned out that fitting the function for the monetary donation requires dividing the raw amounts by 1000. For that reason, all analysis were run on these transformed values.
-
-
-##Results
-
+#### Pilot B Sample
+  In Pilot B, 32 mTurk workers completed a screener survey. Of these, 8 participants (7 younger adults (age<35) and 1 older adults (age>60)) Completed the experimental task.
 
 ### Data preparation
 
@@ -179,8 +175,8 @@ data_vs_discount <- function(V, k, N, amount) {
 ```{r include=TRUE, results='hide', error=FALSE, warning=FALSE, message=FALSE}
 
 #load 'raw' data sets
-df_old=read.csv("Pilot_A_older_raw.csv")
-df_young=read.csv("Pilot_A_young_raw.csv")
+df_old=read.csv("older_PilotB_raw.csv")
+df_young=read.csv("younger_PilotB_raw.csv")
 
 #clean each data set
 ## df_old
@@ -188,7 +184,7 @@ colnames(df_old) <- as.character(unlist(df_old[1,]))
 df_old=df_old[-c(1,2),]
 
 #varaibles to remove
-vars_remove=c('Start Date', 'End Date', 'Response Type', 'IP Address', 'Progress', 'Duration (in seconds)', 'Finished', 'Recorded Date', 'Recipient Last Name', 'Recipient First Name', 'Recipient Email','External Data Reference', 'Location Latitude', 'Location Longitude', 'Distribution Channel', 'User Language', 'issues_not_eligible', 'issues_not_interested', 'gender - Other: - Text', 'race - Other: - Text', 'issues_participant')
+vars_remove=c('consent_yesno','Start Date', 'End Date', 'Response Type', 'Progress', 'Duration (in seconds)', 'Finished', 'Recorded Date', 'Recipient Last Name', 'Recipient First Name', 'Recipient Email','External Data Reference', 'Location Latitude', 'Location Longitude', 'Distribution Channel', 'User Language', 'issues_not_eligible', 'issues_not_interested', 'gender - Other: - Text', 'race - Other: - Text', 'issues_participant')
 
 df_old=df_old%>%select(-one_of(vars_remove))
 
@@ -216,7 +212,7 @@ df_og=df_og%>%select(-one_of(vars_remove))
 
 #Add age group variable
 df_og$age_grp=recode(df_og$age, "lo:35='young'; 60:hi='old'", as.factor.result = T)
-summary(df_og$age_grp) #-> 3 of each
+summary(df_og$age_grp) #-> 1 old, 7 young
 
 #Rename variables to be more readable
 df_og=df_og%>%rename(subid=`Response ID`, gender=`gender - Selected Choice`, race=`race - Selected Choice`)
@@ -234,7 +230,7 @@ str(df_og$subid)
 is.numeric(df_og$age); is.numeric(df_og$income); is.numeric(df_og$imp_relative_num); is.numeric(df_og$imp_friends_num); is.numeric(df_og$rel_1_mon); is.numeric(df_og$rel_1_time); is.numeric(df_og$nonrel_1_mon); is.numeric(df_og$nonrel_1_time)#-> All FALSE
 
 #Recode all variables that should be numeric into numeric
-df_og[,c(3,5:7,9:36)]=as.numeric(unlist(df_og[,c(3,5:7,9:36)])) #-> columns 3, 5:7 & 9:36 (all numeric vars)
+df_og[,c(3,5:35)]=as.numeric(unlist(df_og[,c(3,5:35)])) #-> columns 3, 5:35 (all numeric vars)
 
 #check
 is.numeric(df_og$age); is.numeric(df_og$income); is.numeric(df_og$imp_relative_num); is.numeric(df_og$imp_friends_num); is.numeric(df_og$rel_1_mon); is.numeric(df_og$rel_1_time); is.numeric(df_og$nonrel_1_mon); is.numeric(df_og$nonrel_1_time)#-> all true!
@@ -254,8 +250,6 @@ og_lng=df_og%>%
 
 ```
 
-### Confirmatory analysis
-
 #### Demographic data
 ```{r echo=TRUE, results='hide', error=FALSE, warning=FALSE}
 #table of descpritive statistics
@@ -267,39 +261,6 @@ sig_friends_av=round(mean(imp_friends_num),2), sig_friends_sd=round(sd(imp_frien
 dscrpt2=dscrpt%>%rename('Age group'=age_grp, 'Male/Female ratio'=male_female_ratio)%>%unite('Age (m | sd)', c('Age_av', 'Age_sd'), sep=" | ")%>%unite('Education level (m | sd)', c('Education_av', 'Education_sd'), sep=" | ")%>%unite('Household income (m | sd)', c('Household_income_av', 'Household_income_sd'), sep=" | ")%>%unite('Important relatives (m | sd)', c('sig_relatives_av', 'sig_relatives_sd'), sep=" | ")%>%unite('Important friends (m | sd)', c('sig_friends_av', 'sig_friends_sd'), sep=" | ")
 
 ```
-
-```{r test for differences, include=TRUE, results='hide', error=FALSE, warning=FALSE}
-#Gender (chi-square)
-gen=chisq.test(df_og$gender, df_og$age_grp, rescale.p = T, correct = F)
-#Age
-age=t.test(data=df_og, age~age_grp)
-#education level
-edu_lv=t.test(data=df_og, edu_lv~age_grp)
-#income level
-inc_lv=t.test(data=df_og,income~age_grp)
-#number of close relatives
-rel=t.test(data=df_og, imp_relative_num~age_grp)
-#number of close friends
-frnd=t.test(data=df_og,imp_friends_num~age_grp)
-
-pander(gen, digits=2, caption = "chi-square test for gender differences")
-pander(age, digits=2, caption = "age group difference in average age")
-pander(edu_lv, digits=2, caption = "age group difference in levels of education")
-pander(inc_lv, digits=2, caption = "age group difference in average income")
-pander(rel, digits=2, caption = "age group difference in average number of relatives")
-pander(frnd, digits=2, caption = "age group difference in average number of friends")
-
-```
-
-
-In table 1, we compare the two age groups' demographic variables. In the original paper, older adult participants were significanlty older, less educated, and had significanlty more important relatives. There were no significant differences in income nor number of important friends (see figure 1. for original table).
-
-In this small pilot,the older adult group was significantly older ($t_{(3.8)}$=`r round(age$statistic,2)`, *p*=`r round(age$p.value, 3)`) and less educated ($t_{(4)}$=`r round(edu_lv$statistic,2)`, *p*=`r round(edu_lv$p.value, 3)`). We did not find additional significant differences between the groups.
-
-**Figure 1: Gong et al., 2017 descpriptive statistics by age group**
-![](gong_et_al_demog.png)
-
-`r kable(dscrpt2,align='c', caption = "Table 1: decsriptive statistics by age group")`
 
 #### Fitting the curve for age group median values (for each donation X kinship condition)
 ```{r median values, include=TRUE, results='hide', error=FALSE, warning=FALSE}
@@ -345,7 +306,6 @@ med_plots=ggplot(data=med_table2, aes(x=soc_dist, y=med_amnt, color=age_grp))+
   ggtitle("Donation amounts by social distance for older and younger adults")+
   ggthemes::theme_few()
 ```
-
 
 ```{r curve fitting-median values, include=TRUE, results='hide', error=FALSE, warning=FALSE}
 #define dataset
@@ -452,15 +412,16 @@ med_plot1=ggplot(data=med_table_plot, aes(x=soc_dist, y=med_amnt, color=`Age-Kin
   ylab("Median group amount, moneyX1000 or days")+
   ggtitle("Donation amounts by social distance for older and younger adults")+
   ggthemes::theme_few()
-```
 
+```
 
 As a necessary first step, I first extracted the median donation values for each age group in each of the four donation X kinship conditions. Plotting the data, it appears that compared to the median donation values in the origianl study, values in this small pilot sample were fairly similar, yet far less variable (see figure 2.b).
 
 **Figure 2a- Median donation values and hyperbolic curve- Gong et al., 2017**
+
 ![](gong_et_al_med_amnts.png)                              
 
-**Figure 2b- Median donation values, Pilot A**
+**Figure 2b- Median donation values, Pilot B**
 ```{r, echo=FALSE, warning=FALSE}
 med_plot1
 ```
@@ -468,6 +429,7 @@ med_plot1
 I proceded to fit the hyperbolic discount function to the group median donation values, with the aim of achiving similar goodness-of-fit indices to those obtained by Gong et al. As shown in table 2, the fit (assessed by $R^2$ and *RMSE*) was as good as in the original paper (see figure 3.) the values in the original paper.  
 
 **Figure 3: Gong et al., 2017- V, $\kappa$ and Fit measures for group median values, by condition**
+
 ![](gong_et_al_vk.png)
 
 
@@ -646,27 +608,27 @@ min(df2$k)<k_low; max(df2$k)>k_high; min(df2$AUC)<AUC_low; max(df2$AUC)>AUC_high
 
 ```{r AUC ANOVA, results="hide", error=FALSE, message=FALSE}
 #check if AUC is normally distributed
-ggplot(data=df2, aes(x=AUC))+geom_histogram() #-> it looks bimodal
-ggplot(data = df2, aes(x=log(AUC)))+geom_histogram() #-> still very bimodal...
+#ggplot(data=df2, aes(x=AUC))+geom_histogram() #-> it looks bimodal
+#ggplot(data = df2, aes(x=log(AUC)))+geom_histogram() #-> still very bimodal...
 
 #Since Gong et al., used log(AUC) for their analysis, I shall do the same
-df2$logAUC=log(df2$AUC)
+#df2$logAUC=log(df2$AUC)
 
 #Change subid to factor
-is.numeric(df2$subid) #-> true
-df2$subid=as.character(df2$subid); df2$subid=as.factor(df2$subid)
-is.factor(df2$subid)#-> true
-summary(df2$age_grp); summary(df2$donation); summary(df2$kinship) 
+#is.numeric(df2$subid) #-> true
+#df2$subid=as.character(df2$subid); df2$subid=as.factor(df2$subid)
+#is.factor(df2$subid)#-> true
+#summary(df2$age_grp); summary(df2$donation); summary(df2$kinship) 
 
 # check that predictors are factors and AUC is numeric
-is.factor(df2$age_grp); is.factor(df2$donation); is.factor(df2$kinship) #-> age_grp yes, others no
+#is.factor(df2$age_grp); is.factor(df2$donation); is.factor(df2$kinship) #-> age_grp yes, others no
 
-is.character(df2$donation)#-> true
-df2$donation=as.factor(df2$donation); is.factor(df2$donation)
-is.character(df2$kinship)#-> true
-df2$kinship=as.factor(df2$kinship); is.factor(df2$kinship)
+#is.character(df2$donation)#-> true
+#df2$donation=as.factor(df2$donation); is.factor(df2$donation)
+#is.character(df2$kinship)#-> true
+#df2$kinship=as.factor(df2$kinship); is.factor(df2$kinship)
 
-is.numeric(df2$logAUC)#-> True
+#is.numeric(df2$logAUC)#-> True
 
 # Run mixed ANOVA (without specifying that age_grp is observed)
 
@@ -830,57 +792,41 @@ is.numeric(df2$logAUC)#-> True
 ```{r lmer, warning=FALSE, message=FALSE, error=FALSE, results='hide'}
 #First set contrasts so that the intercept is the AUC value for older adults collapsing across donation and kinship conditions (to reflect the original "main" effect of age group)
 ## age group
-contrasts(df2$age_grp)
-contrasts(df2$age_grp)=cbind('"Main"'=c(-1,1))#-> expecting older adults to be less generous overall, as was found in Gong et al.
+#contrasts(df2$age_grp)
+#contrasts(df2$age_grp)=cbind('"Main"'=c(-1,1))#-> expecting older adults to be less generous overall, as was found in Gong et al.
 ## donation
-contrasts(df2$donation)
-contrasts(df2$donation)=cbind('"Main"'=c(1,-1)) #-> expecting participants to be more generous with money over time
+#contrasts(df2$donation)
+#contrasts(df2$donation)=cbind('"Main"'=c(1,-1)) #-> expecting participants to be more generous with money over time
 ## kinship
-contrasts(df2$kinship)
-contrasts(df2$kinship)=cbind('"Main"'=c(-1,1)) #-> expecting participants to be more generous to relatives over non-relatives
+#contrasts(df2$kinship)
+#contrasts(df2$kinship)=cbind('"Main"'=c(-1,1)) #-> expecting participants to be more generous to relatives over non-relatives
 
 #Run lmer
-lmer1=lmer(data=df2, logAUC~age_grp*donation*kinship+(1|subid), REML = F) #-> fitting with ML because we are interested in getting accurate estimates fir the parameters.
+#lmer1=lmer(data=df2, logAUC~age_grp*donation*kinship+(1|subid), REML = F) #-> fitting with ML because we are interested in getting accurate estimates fir the parameters.
 
 #Run lmer with covariates
-lmer2=lmer(data=df2, logAUC~age_grp*donation*kinship+gender+incm_lv+edu_lv+num_friends+num_relatives+(1|subid), REML = F)
+#lmer2=lmer(data=df2, logAUC~age_grp*donation*kinship+gender+incm_lv+edu_lv+num_friends+num_relatives+(1|subid), REML = F)
 
 #Second-Set contrasts d=so that the interceot is the mean AUC for older adults, when donating time to relatives.
 #In this case, the simple effect of age is the t-test of interest: the difference between older and younger adults when donating time to relatives.
 
 ## age group
-contrasts(df2$age_grp)
-contrasts(df2$age_grp)=cbind('"Young"'=c(0,1))
+#contrasts(df2$age_grp)
+#contrasts(df2$age_grp)=cbind('"Young"'=c(0,1))
 ## donation
-contrasts(df2$donation)
-contrasts(df2$donation)=cbind('"Money"'=c(1,0))
+#contrasts(df2$donation)
+#contrasts(df2$donation)=cbind('"Money"'=c(1,0))
 ## kinship
-contrasts(df2$kinship) #current intercept: old/mon/nonrel
-contrasts(df2$kinship)=cbind('"Non_relatives"'=c(1,0))
+#contrasts(df2$kinship) #current intercept: old/mon/nonrel
+#contrasts(df2$kinship)=cbind('"Non_relatives"'=c(1,0))
 
 #Run lmer
-lmer3=lmer(data=df2, logAUC~age_grp*donation*kinship+(1|subid), REML = F) #-> fitting with ML because we are interested in getting accurate estimates fir the parameters.
+#lmer3=lmer(data=df2, logAUC~age_grp*donation*kinship+(1|subid), REML = F) #-> fitting with ML because we are interested in getting accurate estimates fir the parameters.
 
 #Run lmer with covariates
-lmer4=lmer(data=df2, logAUC~age_grp*donation*kinship+gender+incm_lv+edu_lv+num_friends+num_relatives+(1|subid), REML = F)
+#lmer4=lmer(data=df2, logAUC~age_grp*donation*kinship+gender+incm_lv+edu_lv+num_friends+num_relatives+(1|subid), REML = F)
 
-kable(tidy(lmer1))
-kable(tidy(lmer3))
+#kable(tidy(lmer1))
+#kable(tidy(lmer3))
 ```
 
-`r kable(tidy(lmer1), caption="Table 3: Main effect of age group, using a linear mixed effects model")`
-
-
-`r kable(tidy(lmer3), caption="Table 4: Simple effect of age group when donating time to relatives, using a linear mixed effects model")`
-
-**NOTE TO INSTRUCTORS REGARDING PILOT A ANALYSES AND RESULTS**
----------------------------------------------------------------
-
-The analyses of this study rely on having sufficient sample sizes. For example, the ANOVA won't run after removing cells from participants who's data could be fitted using the hyperbolic discount function and removing outliers as detailed in the original paper. I have outlined the code for the primary analyses of interest, and made sure it works on a large simulated dataset (Please check the "practice_analysis" repo in my "gong2017" folder on the class github account). I believe that these issues will be resolved once the full set of data is collected. In the mean time, and as assurance that this code can work, please see below the visuzlization for the AUC by condition post hoc test. I had to comment out the code for these analyses because the file wouldn't knit with these lines included. 
-
-You may note that using this data to run a mixed effects linear model does indeed produce inteligible results.
-
-I deeply appreciate your patience...
-
-** for reference: Plots for the effects of age group in each of the 4 conditions ** 
-![](AUC_plots_simulated_data.png)
