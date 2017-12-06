@@ -18,8 +18,16 @@ output: html_document
 ##Methods
 
 ###Power Analysis
+In total, within each of the two age groups (younger- those aged 35 and under, and older adults- people aged 60 and older), each participant is providing `r 7*2*2` measures: for each of seven targets (of varying social distances) participants indicate how much money and time they are willing to donate. They report this for both relatives and non-relatives. Howere *these measures are NOT the vaules on which the analysis is run*. These values are used to computed group and individual hyperbplic discount curves of which *AUC* values represent a person's overall donation, and $\kappa$ values reflect a person's discount rate. This procedure results in each participant having 4 *AUC* values and 4 $\kappa$ values: one for each of the donation X kinship conditions. 
+
+The original authors ran their analyses using a mixed (within/between subjects) ANOVAs, where age group was a between subject variable, and donation form and kinship were within subject variables. The dependent variable in the first ANOVA was the log-transformed Area Under the Curve (*AUC*) obtained after fitting a hyperbolic discount curve to individuals donation data. This area represents the total amount participants are willing to donate in each of the four donation form X kinship conditions. 
+
+
+Upon finding a 3-way interaction between age group, donation form and kinship, the authors conducted post-hoc test and found that when donating their time to relatives, older adults were more generous than younger adults. **This mixed design repeated measure ANOVA of AUC values is the main interest for the purpose of this replication, with the post hoc test comparing older and younger adult's AUC values when donating time to relatives**
 
 The original effect sizes of interest were: $\eta_p^2$=0.05 for the qualified main age group effect effect, and *D*=`r round(((2*3.22)/sqrt(145)),2)` for the post-hoc t-test on generosity of time donations for relatives. 
+
+**Replication would be considered successeful if older adults are found to be ststistically more generous than younger adults when donating time to relatives, in a post-hoc *one-tailed* t-test. That is, if the mean *AUC* value for older adults in the time donation X relative condition is higher than that of younger adults** 
 
 Power analysis using G*Power version 3.1.2.9 suggested that in order to obtain 80%, 90% and 95% power for the main effect of age, the required sample sizes are 154, 204, and 252 respectively. Details can be found here:
 
@@ -51,13 +59,15 @@ In order to obtain 80%, 90%, and 95% power to observe the stronger effect of age
 
 ![](t_test_pwr_95.png)
 
-**Feasability-** Since the task requires about 10 minutes to complete online, and since the required samples are somewhat large, the replication study will be powered to observe the stronger effect of age group on generosity in time donations to relatives at 75% power- 40 participants in each age group.
+**Feasability-** Pliot participant completed the task in about 10 minutes. In light of the required sample sizes shown above, acheiving even 80% power would require too large a deviation from the proposed budget. To keep the cost under \$100 allocated to this project, the replication study will have to be powered to observe the stronger effect, that of older adults being more generous in time donation to relatives compared to young adults, in a *one-tailed* test.
 
 ###Planned Sample
 
-The above mentioned power calculation suggests that a sample consisting of **39 older adults** (aged 60 or older), and **39 younger adults** (aged 35 or younger) will suffice to achieve 75% power (see below) to detect the effect of interest. We will rely on Amazon's mechanical Turk for data colelction, and sample only U.S residents to minimize the chance that participants do not read English.
+The above mentioned power calculation suggests that a sample consisting of **39 older adults** (aged 60 or older), and **39 younger adults** (aged 35 or younger) will suffice to achieve 75% power to detect the effect of interest in a one-tailed test (see below). As a note, this is equvilant of having 63% power to observe the effect in a two-tailed test. 
 
-![](Power_t_test_75.png)
+We will rely on Amazon's mechanical Turk for data colelction, and sample only U.S residents to minimize the chance that participants do not read English. Further, older participants will be recruited using the premium qualifications to speed-up data collection and avoid spending a large portion of the budget on non-qualifying participants taking the screener survey.
+
+![](t_test_pwr_75_oneTail.png)
 
   
 ###Materials
@@ -110,7 +120,8 @@ The individual *AUC* and $\kappa$ values are then entered to a dataset comprisin
 
 **Key analysis of interest-** The mixed design repeated measure ANOVA of *AUC* values is the main interest for the purpose of this replication, with the post hoc test comparing older and younger adults' *AUC* values when donating time to relatives. 
 
-"Main" effect of age will be taken as the affect of Age when controlling for all other main independent variables and their interactions (type III sum of squares, as is typically used in Statistical programs). The authors did not specify the type of post-hoc test used to examine group differences in each condition. Since there are relatively few (4) pairwise comparisons in this test, and out of desire to be cautious, I will use the Bonferroni correction to deterimine the statistical significance of this test.
+"Main" effect of age will be taken as the affect of Age when controlling for all other main independent variables and their interactions (type III sum of squares, as is typically used in Statistical programs). The authors did not specify the type of post-hoc test used to examine group differences in each condition, so no correction will be applied in the replication attemp. Further, as mentioned in the power-analysis section, the post-hoc test will be a one-tailed t-test.
+
 Though not of main interest for this replication, I will also run the same ANOVA and post-hoc procedures on individual $\kappa$ values.
 
 **Additional analysis for this data-** Since this is a repeated measures dataset, a statistical procedure that is more robust to imbalances in the dataset is a mixed-effects linear model. I plan to run such a model setting a random intercept (different means) for individuals' AUC values and using planned orthogonal contrasts to test the specific group means difference of interest. Using planned contrasts, I first set the intercept to reflect the overall mean *AUC* value across age groups, donation and kinship conditions. In this case, the effect of age group reflects the "main" effect of age group. The contrast coding for the "age group" reflects the expectation that across donation and kinship conditions, the expectation is that younger adults are more generous.
@@ -127,9 +138,13 @@ Second, as noted above, the amount of money participants are instructed to imagi
 
 Third, the original study was conducted in lab and included a cognitive assesment procedure. The replication is taking place on Amazon's mechanical Turk and does not include cognitive assessment. The decision to drop this assesment was made since the original paper did not find a relationship between performance and cognitive ability, and the first author of the original paper stated in a personal communication that he does not think that this procedure would alter participants' mindsets. 
 
-Fourth, since data for this study is collected on Amazon's Mechanical Turk, I incleded an additional attention check- after indicating the amount of time and money they are willing to donate to a relative at position 20, participants are asked: "In the last question, your answers referred to the participant in position:" with choice options of 3, 7, 12, 16, 20, 28, and 42. Participants who fail to correctly state "20" are excluded from analysis.
+Fourth, since data for this study is collected on Amazon's Mechanical Turk, I included an additional attention check- after indicating the amount of time and money they are willing to donate to a relative at position 20, participants are asked: "In the last question, your answers referred to the participant in position:" with choice options of 3, 7, 12, 16, 20, 28, and 42. Participants who fail to correctly state "20" are excluded from analysis.
 
 Fifth, the original authors fitted the hyperbolic discount function to the data using Matlabv(version 2015a). I am fitting the data using the "optim" function from the 'stats' package for R. Testing this procedure on simulated data yielded similar results to those obtained by Gong et al (2017).
+
+Sixth, the authors do not report how they dealt with missing values for individual participants. I will remove participants with missing *AUC* values (after applying the exclusion criteria reported in the paper) from the analysis altogether.
+
+Seventh, the age range in the young-adult group in the original paper is 18-44. I am restricting this to be under 35. That is becuase in the literature, people above 35 are typically considered middle aged, or at the very least not "young" adults.
   
 ### Methods Addendum (Post Data Collection)
 To assure participant's privacy, indetifiable information (IP addresses and MTurk IDs) was manually removed from the raw data prior to analysis. This was done to allow the data to be shared publicly. 
@@ -237,11 +252,7 @@ is.numeric(df_og$age); is.numeric(df_og$income); is.numeric(df_og$imp_relative_n
 
 #long-form dataset
 og_lng=df_og%>%
-  gather(condition, amount,
-         rel_1_mon,rel_2_mon,rel_5_mon,rel_10_mon,rel_20_mon, rel_50_mon, rel_100_mon,
-         rel_1_time,rel_2_time,rel_5_time,rel_10_time,rel_20_time, rel_50_time, rel_100_time,
-         nonrel_1_mon,nonrel_2_mon,nonrel_5_mon,nonrel_10_mon,nonrel_20_mon, nonrel_50_mon, nonrel_100_mon,
-         nonrel_1_time,nonrel_2_time,nonrel_5_time,nonrel_10_time,nonrel_20_time, nonrel_50_time, nonrel_100_time
+  gather(condition, amount, c(matches("_mon"),matches("_time"))
          )%>%
   separate(condition, c("kin", "soc_dist", "donation"), "_")%>%
   spread(kin, amount)%>%
@@ -606,7 +617,8 @@ df2=df2%>%filter(k<=(mean(k)+3*sd(k)) & k>=(mean(k)-3*sd(k)) & AUC<=(mean(AUC)+3
 min(df2$k)<k_low; max(df2$k)>k_high; min(df2$AUC)<AUC_low; max(df2$AUC)>AUC_high
 ```
 
-```{r AUC ANOVA, results="hide", error=FALSE, message=FALSE}
+
+```{r prepare data for ANOVA and remove participants with outliers, include=TRUE, results='hide', error=FALSE, warning=FALSE, include=FALSE}
 #check if AUC is normally distributed
 #ggplot(data=df2, aes(x=AUC))+geom_histogram() #-> it looks bimodal
 #ggplot(data = df2, aes(x=log(AUC)))+geom_histogram() #-> still very bimodal...
@@ -630,15 +642,7 @@ min(df2$k)<k_low; max(df2$k)>k_high; min(df2$AUC)<AUC_low; max(df2$AUC)>AUC_high
 
 #is.numeric(df2$logAUC)#-> True
 
-# Run mixed ANOVA (without specifying that age_grp is observed)
-
-#anova_AUC=ezANOVA(data = df2, wid=.(subid), dv=.(logAUC), within  = .(donation, kinship), between = .(age_grp), type = 3) #-> type=3 to emulate SPSS, indicate that age_grp is observed (rather than manipulated) to get more accurate eta_sq
-
-#print(anova_AUC) #-> this run only when all the cells are full (i.e without removing outliers. I'm not sure what to do in case there will be ouliers, as there are in this pilot...)
-```
-
-```{r remove participants, include=TRUE, results='hide', error=FALSE, warning=FALSE}
-##One option- remove all observations of subjects with outliers
+## Remove all observations of subjects with outliers
 
 #mon_counts=df2%>%filter(donation=="mon")%>%group_by(subid)%>%summarise(AUC_obs=length(AUC), k_obs=length(k))%>%ungroup()
 #min(mon_counts$AUC_obs); min(mon_counts$k_obs)#-> nothing problematic here
@@ -686,7 +690,7 @@ min(df2$k)<k_low; max(df2$k)>k_high; min(df2$AUC)<AUC_low; max(df2$AUC)>AUC_high
 #print(anova_AUC2) #->this hacky thing works...But mentions that this might be a problem for type 3 sum of squares.
 ```
 
-```{r post hoc test of interest, include=TRUE, results='hide', error=FALSE, warning=FALSE}
+```{r post hoc test of interest, include=TRUE, results='hide', error=FALSE, warning=FALSE, include=FALSE}
 #get the appropriate dataset
 
 #df2_tr_crt=df2_time_crt%>%filter(donation=="time", kinship=="rel")
@@ -695,10 +699,8 @@ min(df2$k)<k_low; max(df2$k)>k_high; min(df2$AUC)<AUC_low; max(df2$AUC)>AUC_high
 #n_comparisons=2*2 #-> (there are 4 possible comparisons: old-young in both donations and both kinships)
 
 #run t.test
-#t.1=t.test(data=df2_tr_crt, log(AUC)~age_grp) #-> run the test on the dataframe with only donation and time reported
+#t.1=t.test(data=df2_tr_crt, log(AUC)~age_grp, alternative='greater') #-> run the one-sided test on the dataframe with only relatives and time reported
 #print(t.1)
-#t_interest=t.1$statistic; df_interest=t.1$parameter #-> get the value of the t-statistic and degrees of freedom
-#p_interest=t.1$p.value*n_comparisons #-> multiply by number of comparisons
 
 ```
 
@@ -730,7 +732,7 @@ min(df2$k)<k_low; max(df2$k)>k_high; min(df2$AUC)<AUC_low; max(df2$AUC)>AUC_high
 ```
 
 ##### k values, secondary analysis
-```{r k ANOVA, results='hide', error=FALSE, warning=FALSE}
+```{r k ANOVA, results='hide', error=FALSE, warning=FALSE, include=FALSE}
 #chack if AUC is normally distributed
 #ggplot(data=df2, aes(x=k))+geom_histogram() #-> positive skew
 #ggplot(data = df2, aes(x=log(k)))+geom_histogram() #-> much better
@@ -748,13 +750,13 @@ min(df2$k)<k_low; max(df2$k)>k_high; min(df2$AUC)<AUC_low; max(df2$AUC)>AUC_high
 #print(anova_k) #-> this run only when all the cells are full (i.e without removing outliers. I'm not sure what to do in case there will be ouliers, as there are ni this simulated data...)
 ```
 
-```{r k values ANOVA, results='hide', error=FALSE, warning=FALSE}
+```{r k values ANOVA, results='hide', error=FALSE, warning=FALSE, include=FALSE}
 #anova_k=ezANOVA(data = df2_time_crt, wid=.(subid), dv=.(log_k), within  = .(donation, kinship), between = .(age_grp),observed = .(age_grp), type = 3) #-> type=3 to emulate SPSS, indicate that age_grp is observed (rather than manipulated) to get more accurate eta_sq
 
 #print(anova_k) #-> comment main results (Gong et al. found sig. age_grp*donation interaction (as well as kinship*donation which is not of interest)
 ```
 
-```{r k values post-hoc t-tests, results='hide', error=FALSE, warning=FALSE}
+```{r k values post-hoc t-tests, results='hide', error=FALSE, warning=FALSE, include=FALSE}
 #Gong et al found that there was no difference in discounting for time donations regardless of kinship, but that older adults discounted money donation more so than yound adults, in both donation conditions
 
 #get the appropriate datasets-
@@ -789,7 +791,7 @@ min(df2$k)<k_low; max(df2$k)>k_high; min(df2$AUC)<AUC_low; max(df2$AUC)>AUC_high
 ```
 
 #####Better analysis to test hypothesis- mexed effects linear model with planned orthogonal contrasts
-```{r lmer, warning=FALSE, message=FALSE, error=FALSE, results='hide'}
+```{r lmer, warning=FALSE, message=FALSE, error=FALSE, results='hide', include=FALSE}
 #First set contrasts so that the intercept is the AUC value for older adults collapsing across donation and kinship conditions (to reflect the original "main" effect of age group)
 ## age group
 #contrasts(df2$age_grp)
